@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Osprey AI Labs - Enterprise Agent Production Infrastructure. Transform your enterprise with intelligent AI automation and supply chain solutions.">
+    <meta name="keywords" content="AI, Machine Learning, Enterprise AI, Agentic AI, Supply Chain, Automation">
+    <meta name="author" content="Osprey AI Labs">
+    <title>Osprey AI Labs - Enterprise AI Platform</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23607ea2'/%3E%3Cstop offset='100%25' style='stop-color:%238197ac'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='50' cy='50' r='45' fill='url(%23g)'/%3E%3Cpath d='M50 20 L35 40 L50 35 L65 40 Z' fill='white'/%3E%3Cpath d='M50 35 L50 80' stroke='white' stroke-width='3'/%3E%3C/svg%3E">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav" id="nav">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <div class="logo-circle">
+                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#607ea2"/>
+                                <stop offset="100%" style="stop-color:#8197ac"/>
+                            </linearGradient>
+                        </defs>
+                        <circle cx="50" cy="50" r="45" fill="url(#logoGradient)"/>
+                        <path d="M50 20 L35 40 L50 35 L65 40 Z" fill="white"/>
+                        <path d="M50 35 L50 80" stroke="white" stroke-width="3"/>
+                    </svg>
+                </div>
+                <span class="logo-text">OSPREY AI</span>
+            </div>
+            <div class="nav-links">
+                <a href="#home" class="nav-link active">Home</a>
+                <a href="#about" class="nav-link">About</a>
+                <a href="#services" class="nav-link">Services</a>
+                <a href="#solutions" class="nav-link">Solutions</a>
+                <a href="#contact" class="nav-link">Contact</a>
+                <button class="nav-button" onclick="showLogin()">Sign In</button>
+            </div>
+            <div class="nav-mobile-toggle" onclick="toggleMobileNav()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div id="main-content" class="main-content">
+        
+        <!-- Home Section -->
+        <section id="home" class="section hero-section">
+            <div class="animated-bg">
+                <div class="gradient-orb orb-1"></div>
+                <div class="gradient-orb orb-2"></div>
+                <div class="gradient-orb orb-3"></div>
+            </div>
+            <div class="container">
+                <div class="hero-content">
+                    <div class="hero-badge">
+                        <span class="badge-dot"></span>
+                        Enterprise Agent Production Infrastructure
+                    </div>
+                    <h1 class="hero-title">
+                        Reimagine Enterprise Workflows with 
+                        <span class="gradient-text">Agentic AI</span>
+                    </h1>
+                    <p class="hero-subtitle">
+                        Enterprise AI strategy, agentic automation, and supply chain solutions delivered with governance and measurable impact. Transform complex workflows in weeks, not quarters.
+                    </p>
+                    <div class="hero-buttons">
+                        <button class="btn btn-primary" onclick="showLogin()">
+                            Get Started
+                            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M5 12h14M12 5l7 7-7 7" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </button>
+                        <button class="btn btn-secondary">
+                            Watch Demo
+                        </button>
+                    </div>
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">500+</div>
+                            <div class="stat-label">Enterprise Clients</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">10K+</div>
+                            <div class="stat-label">AI Agents Deployed</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">45+</div>
+                            <div class="stat-label">Countries Served</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="section about-section">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-badge">About Osprey AI Labs</span>
+                    <h2 class="section-title">Building the Future of Enterprise AI</h2>
+                    <p class="section-subtitle">We deliver enterprise AI solutions that drive real business outcomes through strategic automation and intelligent systems.</p>
+                </div>
+                <div class="about-grid">
+                    <div class="about-card">
+                        <div class="about-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                                <path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
+                            </svg>
+                        </div>
+                        <h3>Our Mission</h3>
+                        <p>Empower enterprises to harness the full potential of AI through strategic implementation, robust governance, and measurable ROI.</p>
+                    </div>
+                    <div class="about-card">
+                        <div class="about-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12 6 12 12 16 14"/>
+                            </svg>
+                        </div>
+                        <h3>Our Vision</h3>
+                        <p>Create a world where every enterprise leverages AI responsibly and effectively to solve complex challenges and unlock new opportunities.</p>
+                    </div>
+                    <div class="about-card">
+                        <div class="about-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                        </div>
+                        <h3>Our Team</h3>
+                        <p>World-class experts in AI, machine learning, supply chain optimization, and enterprise architecture working together for your success.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section id="services" class="section services-section">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-badge">Our Services</span>
+                    <h2 class="section-title">Comprehensive AI Solutions</h2>
+                    <p class="section-subtitle">End-to-end AI services designed for enterprise scale and security</p>
+                </div>
+                <div class="services-grid">
+                    <div class="service-card">
+                        <div class="service-icon gradient-blue">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M12 2a10 10 0 1 0 0 20 10 10 0 1 0 0-20z"/>
+                                <path d="M12 6v6l4 2"/>
+                            </svg>
+                        </div>
+                        <h3>AI Advisory</h3>
+                        <div class="service-tags">
+                            <span>POLICIES</span>
+                            <span>GUARDRAILS</span>
+                            <span>COE</span>
+                        </div>
+                        <p>Enterprise AI strategy, risk & governance. ROI roadmaps, operating model & roles, playbooks.</p>
+                        <button class="service-link">Learn More</button>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon gradient-purple">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                            </svg>
+                        </div>
+                        <h3>AI & Automation</h3>
+                        <div class="service-tags">
+                            <span>AGENTIC AI</span>
+                            <span>AIOPS</span>
+                            <span>MLOPS</span>
+                        </div>
+                        <p>Design to run: architecture, pipelines, evals, observability, continuous improvement.</p>
+                        <button class="service-link">Learn More</button>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon gradient-green">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                            </svg>
+                        </div>
+                        <h3>Supply Chain</h3>
+                        <div class="service-tags">
+                            <span>O2C</span>
+                            <span>P2P</span>
+                            <span>TMS</span>
+                            <span>WMS</span>
+                        </div>
+                        <p>Planning, fulfillment, and analytics with embedded AI—backed by accelerators.</p>
+                        <button class="service-link">Learn More</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Solutions Section -->
+        <section id="solutions" class="section solutions-section">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-badge">Solutions</span>
+                    <h2 class="section-title">Enterprise-Grade Capabilities</h2>
+                </div>
+                <div class="solutions-grid">
+                    <div class="solution-item">
+                        <div class="solution-number">01</div>
+                        <h3>Observability Dashboard</h3>
+                        <p>Monitor AI workflows and system performance in real-time with comprehensive metrics and alerts.</p>
+                    </div>
+                    <div class="solution-item">
+                        <div class="solution-number">02</div>
+                        <h3>RAG Systems</h3>
+                        <p>Advanced document processing and knowledge retrieval powered by cutting-edge AI models.</p>
+                    </div>
+                    <div class="solution-item">
+                        <div class="solution-number">03</div>
+                        <h3>NL2SQL Builder</h3>
+                        <p>Transform natural language queries into optimized SQL with enterprise-grade accuracy.</p>
+                    </div>
+                    <div class="solution-item">
+                        <div class="solution-number">04</div>
+                        <h3>Workflow Automation</h3>
+                        <p>Visual workflow builder for creating and managing complex agentic AI processes.</p>
+                    </div>
+                    <div class="solution-item">
+                        <div class="solution-number">05</div>
+                        <h3>Agent Orchestration</h3>
+                        <p>Coordinate multiple AI agents to solve complex business problems collaboratively.</p>
+                    </div>
+                    <div class="solution-item">
+                        <div class="solution-number">06</div>
+                        <h3>Analytics Engine</h3>
+                        <p>Deep insights into AI performance, costs, and business impact with predictive analytics.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="section contact-section">
+            <div class="container">
+                <div class="contact-grid">
+                    <div class="contact-info">
+                        <span class="section-badge">Get In Touch</span>
+                        <h2 class="section-title">Ready to Transform Your Enterprise?</h2>
+                        <p>Let's discuss how Osprey AI Labs can help you achieve your AI goals with proven strategies and measurable results.</p>
+                        <div class="contact-details">
+                            <div class="contact-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                    <circle cx="12" cy="10" r="3"/>
+                                </svg>
+                                <div>
+                                    <div class="contact-label">Location</div>
+                                    <div class="contact-value">Global Headquarters</div>
+                                </div>
+                            </div>
+                            <div class="contact-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                    <polyline points="22,6 12,13 2,6"/>
+                                </svg>
+                                <div>
+                                    <div class="contact-label">Email</div>
+                                    <div class="contact-value"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="ed8e8283998c8e99ad829e9d9f88948c84c38e8280">[email&#160;protected]</a></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="contact-form">
+                        <form onsubmit="handleContactForm(event)">
+                            <div class="form-group">
+                                <input type="text" placeholder="Your Name" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="email" placeholder="Email Address" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" placeholder="Company">
+                            </div>
+                            <div class="form-group">
+                                <textarea placeholder="Tell us about your project" rows="4" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-full">Send Message</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="login-modal" class="modal">
+        <div class="modal-overlay" onclick="closeLogin()"></div>
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeLogin()">×</button>
+            <div class="modal-header">
+                <div class="logo-circle small">
+                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="logoGradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#607ea2"/>
+                                <stop offset="100%" style="stop-color:#8197ac"/>
+                            </linearGradient>
+                        </defs>
+                        <circle cx="50" cy="50" r="45" fill="url(#logoGradient2)"/>
+                        <path d="M50 20 L35 40 L50 35 L65 40 Z" fill="white"/>
+                        <path d="M50 35 L50 80" stroke="white" stroke-width="3"/>
+                    </svg>
+                </div>
+                <h2>Welcome Back</h2>
+                <p>Sign in to access your dashboard</p>
+            </div>
+            <form id="login-form" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="username" placeholder="Enter your username" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="password" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Sign In</button>
+                <p class="form-note">Demo: admin/admin123 or demo/demo123</p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="dashboard" style="display: none;"></div>
+
+    <!-- Sc
