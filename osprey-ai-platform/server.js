@@ -1,3 +1,4 @@
+// server.js file
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const session = require('express-session');
