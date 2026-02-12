@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 10000; // Render uses PORT env variable
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, '..')));
+app.use(express.static(__dirname)); // FIXED: Serve static files from current directory
 
 // Session configuration
 app.use(session({
@@ -375,7 +375,7 @@ app.get('/api/activity/recent', requireAuth, (req, res) => {
 
 // Serve index.html for root
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'index.html'));
+    res.sendFile(path.join(__dirname, 'index.html')); // FIXED: Serve from current directory
 });
 
 // Error handling
