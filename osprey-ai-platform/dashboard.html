@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Osprey AI Dashboard - Agent Studio">
+    <title>Dashboard - Osprey AI Labs</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar">
+            <div style="padding: var(--space-6); border-bottom: 1px solid var(--color-border);">
+                <a href="index.html" style="display: flex; align-items: center; gap: var(--space-3); text-decoration: none;">
+                    <svg width="32" height="32" viewBox="0 0 100 100" fill="none">
+                        <circle cx="50" cy="50" r="45" fill="#607ea2"/>
+                        <path d="M50 20 L70 40 L50 60 L30 40 Z" fill="white" opacity="0.9"/>
+                    </svg>
+                    <span style="font-size: var(--font-size-lg); font-weight: 600; color: var(--color-text-primary);">Osprey AI</span>
+                </a>
+            </div>
+
+            <nav class="sidebar-nav" style="padding: var(--space-6);">
+                <a href="#overview" class="sidebar-nav-item active">
+                    <i data-lucide="layout-dashboard"></i>
+                    Dashboard
+                </a>
+                <a href="#agents" class="sidebar-nav-item">
+                    <i data-lucide="brain"></i>
+                    Agents
+                </a>
+                <a href="#workflows" class="sidebar-nav-item">
+                    <i data-lucide="workflow"></i>
+                    Workflows
+                </a>
+                <a href="#analytics" class="sidebar-nav-item">
+                    <i data-lucide="bar-chart"></i>
+                    Analytics
+                </a>
+                <a href="#integrations" class="sidebar-nav-item">
+                    <i data-lucide="plug"></i>
+                    Integrations
+                </a>
+                <a href="#logs" class="sidebar-nav-item">
+                    <i data-lucide="file-text"></i>
+                    Logs
+                </a>
+                <a href="#api-keys" class="sidebar-nav-item">
+                    <i data-lucide="key"></i>
+                    API Keys
+                </a>
+                <a href="#team" class="sidebar-nav-item">
+                    <i data-lucide="users"></i>
+                    Team
+                </a>
+                <a href="#billing" class="sidebar-nav-item">
+                    <i data-lucide="credit-card"></i>
+                    Billing
+                </a>
+                <a href="#settings" class="sidebar-nav-item">
+                    <i data-lucide="settings"></i>
+                    Settings
+                </a>
+            </nav>
+
+            <div style="padding: var(--space-6); border-top: 1px solid var(--color-border); margin-top: auto;">
+                <div class="dropdown">
+                    <button class="dropdown-toggle" style="width: 100%; justify-content: space-between;">
+                        <div style="display: flex; align-items: center; gap: var(--space-3);">
+                            <div style="width: 36px; height: 36px; border-radius: 50%; background: var(--gradient-primary);"></div>
+                            <div style="text-align: left;">
+                                <div style="font-weight: 600; font-size: var(--font-size-sm);">John Doe</div>
+                                <div style="font-size: var(--font-size-xs); color: var(--color-text-tertiary);">Pro Plan</div>
+                            </div>
+                        </div>
+                        <i data-lucide="chevron-down"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a href="#profile" class="dropdown-item"><i data-lucide="user"></i> Profile</a>
+                        <a href="#settings" class="dropdown-item"><i data-lucide="settings"></i> Settings</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="index.html" class="dropdown-item"><i data-lucide="log-out"></i> Sign Out</a>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <!-- Header -->
+            <header class="dashboard-header">
+                <div>
+                    <h1 style="font-size: var(--font-size-2xl); margin-bottom: var(--space-1);">Dashboard</h1>
+                    <div class="breadcrumb">
+                        <div class="breadcrumb-item">
+                            <i data-lucide="home"></i>
+                            <a href="#">Home</a>
+                        </div>
+                        <span class="breadcrumb-separator"><i data-lucide="chevron-right"></i></span>
+                        <div class="breadcrumb-item">Dashboard</div>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: var(--space-4);">
+                    <div class="search-bar">
+                        <i data-lucide="search" class="search-icon"></i>
+                        <input type="text" class="search-input" placeholder="Search...">
+                    </div>
+                    <button class="btn btn-ghost btn-icon">
+                        <i data-lucide="bell"></i>
+                    </button>
+                    <button class="theme-toggle" id="themeToggle">
+                        <i data-lucide="sun" class="sun-icon"></i>
+                        <i data-lucide="moon" class="moon-icon" style="display: none;"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <span class="stat-card-label">Total Agents</span>
+                            <div class="stat-card-icon"><i data-lucide="brain"></i></div>
+                        </div>
+                        <div class="stat-card-value">12</div>
+                        <div class="stat-card-change positive"><i data-lucide="trending-up"></i> 3 new this month</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <span class="stat-card-label">API Calls</span>
+                            <div class="stat-card-icon"><i data-lucide="activity"></i></div>
+                        </div>
+                        <div class="stat-card-value">847K</div>
+                        <div class="stat-card-change positive"><i data-lucide="trending-up"></i> +23% vs last month</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <span class="stat-card-label">Success Rate</span>
+                            <div class="stat-card-icon"><i data-lucide="check-circle"></i></div>
+                        </div>
+                        <div class="stat-card-value">99.7%</div>
+                        <div class="stat-card-change positive"><i data-lucide="trending-up"></i> +0.3% improvement</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <span class="stat-card-label">Avg Response Time</span>
+                            <div class="stat-card-icon"><i data-lucide="zap"></i></div>
+                        </div>
+                        <div class="stat-card-value">87ms</div>
+                        <div class="stat-card-change positive"><i data-lucide="trending-down"></i> 45ms faster</div>
+                    </div>
+                </div>
+
+                <!-- Active Agents -->
+                <div class="glass-card" style="margin-top: var(--space-8);">
+                    <div class="card-header" style="padding: var(--space-6); border-bottom: 1px solid var(--color-border); display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h2 style="font-size: var(--font-size-xl); margin-bottom: var(--space-1);">Active Agents</h2>
+                            <p style="font-size: var(--font-size-sm); color: var(--color-text-tertiary);">Currently running and processing requests</p>
+                        </div>
+                        <a href="#" class="btn btn-primary">
+                            <i data-lucide="plus"></i>
+                            New Agent
+                        </a>
+                    </div>
+                    <div style="padding: var(--space-6); display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: var(--space-6);">
+                        <!-- Research Agent Card -->
+                        <div class="glass-card">
+                            <div style="display: flex; align-items: flex-start; gap: var(--space-4); margin-bottom: var(--space-4);">
+                                <div style="width: 56px; height: 56px; border-radius: var(--radius-xl); background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center;">
+                                    <i data-lucide="search" style="width: 28px; height: 28px; color: white;"></i>
+                                </div>
+                                <div style="flex: 1;">
+                                    <div style="display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-1);">
+                                        <h3 style="font-weight: 600;">Research Agent</h3>
+                                        <div class="agent-status active">
+                                            <div class="agent-status-dot"></div>
+                                            Active
+                                        </div>
+                                    </div>
+                                    <p style="font-size: var(--font-size-sm); color: var(--color-text-tertiary);">Web research & synthesis</p>
+                                </div>
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); padding: var(--space-4); background: var(--color-surface-secondary); border-radius: var(--radius-lg); margin-bottom: var(--space-4);">
+                                <div>
+                                    <div style="font-size: var(--font-size-xs); color: var(--color-text-tertiary); margin-bottom: 4px;">Requests</div>
+                                    <div style="font-size: var(--font-size-xl); font-weight: 700;">1,247</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: var(--font-size-xs); color: var(--color-text-tertiary); margin-bottom: 4px;">Success</div>
+                                    <div style="font-size: var(--font-size-xl); font-weight: 700; color: var(--color-success);">99.8%</div>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: var(--space-2);">
+                                <a href="agent-research.html" class="btn btn-primary btn-sm" style="flex: 1;">Configure</a>
+                                <button class="btn btn-ghost btn-sm btn-icon"><i data-lucide="more-vertical"></i></button>
+                            </div>
+                        </div>
+
+                        <!-- Code Agent Card -->
+                        <div class="glass-card">
+                            <div style="display: flex; align-items: flex-start; gap: var(--space-4); margin-bottom: var(--space-4);">
+                                <div style="width: 56px; height: 56px; border-radius: var(--radius-xl); background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); display: flex; align-items: center; justify-content: center;">
+                                    <i data-lucide="code" style="width: 28px; height: 28px; color: white;"></i>
+                                </div>
+                                <div style="flex: 1;">
+                                    <div style="display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-1);">
+                                        <h3 style="font-weight: 600;">Code Agent</h3>
+                                        <div class="agent-status active">
+                                            <div class="agent-status-dot"></div>
+                                            Active
+                                        </div>
+                                    </div>
+                                    <p style="font-size: var(--font-size-sm); color: var(--color-text-tertiary);">Code generation & review</p>
+                                </div>
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); padding: var(--space-4); background: var(--color-surface-secondary); border-radius: var(--radius-lg); margin-bottom: var(--space-4);">
+                                <div>
+                                    <div style="font-size: var(--font-size-xs); color: var(--color-text-tertiary); margin-bottom: 4px;">Requests</div>
+                                    <div style="font-size: var(--font-size-xl); font-weight: 700;">2,891</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: var(--font-size-xs); color: var(--color-text-tertiary); margin-bottom: 4px;">Success</div>
+                                    <div style="font-size: var(--font-size-xl); font-weight: 700; color: var(--color-success);">99.5%</div>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: var(--space-2);">
+                                <a href="agent-code.html" class="btn btn-primary btn-sm" style="flex: 1;">Configure</a>
+                                <button class="btn btn-ghost btn-sm btn-icon"><i data-lucide="more-vertical"></i></button>
+                            </div>
+                        </div>
+
+                        <!-- Data Agent Card -->
+                        <div class="glass-card">
+                            <div style="display: flex; align-items: flex-start; gap: var(--space-4); margin-bottom: var(--space-4);">
+                                <div style="width: 56px; height: 56px; border-radius: var(--radius-xl); background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); display: flex; align-items: center; justify-content: center;">
+                                    <i data-lucide="database" style="width: 28px; height: 28px; color: white;"></i>
+                                </div>
+                                <div style="flex: 1;">
+                                    <div style="display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-1);">
+                                        <h3 style="font-weight: 600;">Data Agent</h3>
+                                        <div class="agent-status active">
+                                            <div class="agent-status-dot"></div>
+                                            Active
+                                        </div>
+                                    </div>
+                                    <p style="font-size: var(--font-size-sm); color: var(--color-text-tertiary);">Data analysis & viz</p>
+                                </div>
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); padding: var(--space-4); background: var(--color-surface-secondary); border-radius: var(--radius-lg); margin-bottom: var(--space-4);">
+                                <div>
+                                    <div style="font-size: var(--font-size-xs); color: var(--color-text-tertiary); margin-bottom: 4px;">Requests</div>
+                                    <div style="font-size: var(--font-size-xl); font-weight: 700;">5,432</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: var(--font-size-xs); color: var(--color-text-tertiary); margin-bottom: 4px;">Success</div>
+                                    <div style="font-size: var(--font-size-xl); font-weight: 700; color: var(--color-success);">100%</div>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: var(--space-2);">
+                                <a href="agent-data.html" class="btn btn-primary btn-sm" style="flex: 1;">Configure</a>
+                                <button class="btn btn-ghost btn-sm btn-icon"><i data-lucide="more-vertical"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="glass-card" style="margin-top: var(--space-8);">
+                    <div class="card-header" style="padding: var(--space-6); border-bottom: 1px solid var(--color-border);">
+                        <h2 style="font-size: var(--font-size-xl);">Recent Activity</h2>
+                    </div>
+                    <div class="activity-feed" style="padding: var(--space-4);">
+                        <div class="activity-item">
+                            <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <i data-lucide="check" style="width: 20px; height: 20px; color: white;"></i>
+                            </div>
+                            <div>
+                                <div style="font-weight: 600; margin-bottom: var(--space-1);">Research Agent completed task</div>
+                                <div style="font-size: var(--font-size-sm); color: var(--color-text-tertiary);">Generated comprehensive market analysis report</div>
+                                <div style="font-size: var(--font-size-xs); color: var(--color-text-tertiary); margin-top: 4px;">2 minutes ago</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <i data-lucide="code" style="width: 20px; height: 20px; color: white;"></i>
+                            </div>
+                            <div>
+                                <div style="font-weight: 600; margin-bottom: var(--space-1);">Code Agent deployed</div>
+                                <div style="font-size: var(--font-size-sm); color: var(--color-text-tertiary);">New Python code generation agent is now live</div>
+                                <div style="font-size: var(--font-size-xs); color: var(--color-text-tertiary); margin-top: 4px;">1 hour ago</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <i data-lucide="database" style="width: 20px; height: 20px; color: white;"></i>
+                            </div>
+                            <div>
+                                <div style="font-weight: 600; margin-bottom: var(--space-1);">Data pipeline completed</div>
+                                <div style="font-size: var(--font-size-sm); color: var(--color-text-tertiary);">Processed 1.2M records in 847ms average</div>
+                                <div style="font-size: var(--font-size-xs); color: var(--color-text-tertiary); margin-top: 4px;">3 hours ago</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <i data-lucide="users" style="width: 20px; height: 20px; color: white;"></i>
+                            </div>
+                            <div>
+                                <div style="font-weight: 600; margin-bottom: var(--space-1);">New team member added</div>
+                                <div style="font-size: var(--font-size-sm); color: var(--color-text-tertiary);">Sarah Chen joined as Admin</div>
+                                <div style="font-size: var(--font-size-xs); color: var(--color-text-tertiary); margin-top: 4px;">Yesterday</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Usage Analytics -->
+                <div class="glass-card" style="margin-top: var(--space-8);">
+                    <div class="card-header" style="padding: var(--space-6); border-bottom: 1px solid var(--color-border); display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h2 style="font-size: var(--font-size-xl); margin-bottom: var(--space-1);">API Usage</h2>
+                            <p style="font-size: var(--font-size-sm); color: var(--color-text-tertiary);">Last 7 days</p>
+                        </div>
+                        <div class="tabs" style="margin: 0;">
+                            <button class="tab active" data-tab="requests">Requests</button>
+                            <button class="tab" data-tab="latency">Latency</button>
+                            <button class="tab" data-tab="errors">Errors</button>
+                        </div>
+                    </div>
+                    <div style="padding: var(--space-8); height: 300px; display: flex; align-items: flex-end; justify-content: space-around; gap: var(--space-2);">
+                        <div style="width: 100%; height: 60%; background: linear-gradient(180deg, var(--color-primary) 0%, rgba(96, 126, 162, 0.5) 100%); border-radius: var(--radius-md) var(--radius-md) 0 0;"></div>
+                        <div style="width: 100%; height: 75%; background: linear-gradient(180deg, var(--color-primary) 0%, rgba(96, 126, 162, 0.5) 100%); border-radius: var(--radius-md) var(--radius-md) 0 0;"></div>
+                        <div style="width: 100%; height: 85%; background: linear-gradient(180deg, var(--color-primary) 0%, rgba(96, 126, 162, 0.5) 100%); border-radius: var(--radius-md) var(--radius-md) 0 0;"></div>
+                        <div style="width: 100%; height: 55%; background: linear-gradient(180deg, var(--color-primary) 0%, rgba(96, 126, 162, 0.5) 100%); border-radius: var(--radius-md) var(--radius-md) 0 0;"></div>
+                        <div style="width: 100%; height: 70%; background: linear-gradient(180deg, var(--color-primary) 0%, rgba(96, 126, 162, 0.5) 100%); border-radius: var(--radius-md) var(--radius-md) 0 0;"></div>
+                        <div style="width: 100%; height: 95%; background: linear-gradient(180deg, var(--color-primary) 0%, rgba(96, 126, 162, 0.5) 100%); border-radius: var(--radius-md) var(--radius-md) 0 0;"></div>
+                        <div style="width: 100%; height: 80%; background: linear-gradient(180deg, var(--color-primary) 0%, rgba(96, 126, 162, 0.5) 100%); border-radius: var(--radius-md) var(--radius-md) 0 0;"></div>
+                    </div>
+                </div>
+
+                <!-- API Keys Section -->
+                <div class="glass-card" style="margin-top: var(--space-8);">
+                    <div class="card-header" style="padding: var(--space-6); border-bottom: 1px solid var(--color-border); display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h2 style="font-size: var(--font-size-xl); margin-bottom: var(--space-1);">API Keys</h2>
+                            <p style="font-size: var(--font-size-sm); color: var(--color-text-tertiary);">Manage your API authentication</p>
+                        </div>
+                        <button class="btn btn-primary">
+                            <i data-lucide="plus"></i>
+                            Create Key
+                        </button>
+                    </div>
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Key</th>
+                                    <th>Created</th>
+                                    <th>Last Used</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="font-weight: 600;">Production</td>
+                                    <td style="font-family: var(--font-mono); font-size: var(--font-size-sm);">osp_prod_••••••••••••4a2f</td>
+                                    <td style="color: var(--color-text-tertiary);">Jan 15, 2025</td>
+                                    <td><span class="badge badge-success">Active</span></td>
+                                    <td>
+                                        <button class="btn btn-ghost btn-sm"><i data-lucide="copy"></i></button>
+                                        <button class="btn btn-ghost btn-sm"><i data-lucide="trash-2"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: 600;">Development</td>
+                                    <td style="font-family: var(--font-mono); font-size: var(--font-size-sm);">osp_dev_••••••••••••9b1c</td>
+                                    <td style="color: var(--color-text-tertiary);">Jan 10, 2025</td>
+                                    <td style="color: var(--color-text-tertiary);">2 hours ago</td>
+                                    <td>
+                                        <button class="btn btn-ghost btn-sm"><i data-lucide="copy"></i></button>
+                                        <button class="btn btn-ghost btn-sm"><i data-lucide="trash-2"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: 600;">Testing</td>
+                                    <td style="font-family: var(--font-mono); font-size: var(--font-size-sm);">osp_test_••••••••••••7e3d</td>
+                                    <td style="color: var(--color-text-tertiary);">Dec 28, 2024</td>
+                                    <td style="color: var(--color-text-tertiary);">1 week ago</td>
+                                    <td>
+                                        <button class="btn btn-ghost btn-sm"><i data-lucide="copy"></i></button>
+                                        <button class="btn btn-ghost btn-sm"><i data-lucide="trash-2"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="main.js"></script>
+    <script src="dashboard.js"></script>
+</body>
+</html>
+
+                <!-- Team Management Section -->
+                <div class="glass-card" style="margin-top: var(--space-8);">
+                    <div class="card-header" style="padding: var(--space-6); border-bottom: 1px solid var(--color-border); display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h2 style="font-size: var(--font-size-xl); margin-bottom: var(--space-1);">Team Members</h2>
+                            <p style="font-size: var(--font-size-sm); color: var(--color-text-tertiary);">5 active members</p>
+                        </div>
+                        <button class="btn btn-primary">
+                            <i data-lucide="user-plus"></i>
+                            Invite Member
+                        </button>
+                    </div>
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Member</th>
+                                    <th>Role</th>
+                                    <th>Last Active</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div style="display: flex; align-items: center; gap: var(--space-3);">
+                                            <div style="width: 36px; height: 36px; border-radius: 50%; background: var(--gradient-primary);"></div>
+                                            <div>
+                                                <div style="font-weight: 600;">John Doe</div>
+                                                <div style="font-size: var(--font-size-sm); color: var(--color-text-tertiary);">john@company.com</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge badge-primary">Owner</span></td>
+                                    <td style="color: var(--color-text-tertiary);">Online now</td>
+                                    <td><span class="badge badge-success">Active</span></td>
+                                    <td>
+                                        <button class="btn btn-ghost btn-sm"><i data-lucide="more-horizontal"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div style="display: flex; align-items: center; gap: var(--space-3);">
+                                            <div style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);"></div>
+                                            <div>
+                                                <div style="font-weight: 600;">Sarah Chen</div>
+                                                <div style="font-size: var(--font-size-sm); color: var(--color-text-tertiary);">sarah@company.com</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge badge-primary">Admin</span></td>
+                                    <td style="color: var(--color-text-tertiary);">2 hours ago</td>
+                                    <td><span class="badge badge-success">Active</span></td>
+                                    <td>
+                                        <button class="btn btn-ghost btn-sm"><i data-lucide="more-horizontal"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div style="display: flex; align-items: center; gap: var(--space-3);">
+                                            <div style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"></div>
+                                            <div>
+                                                <div style="font-weight: 600;">Michael Torres</div>
+                                                <div style="font-size: var(--font-size-sm); color: var(--color-text-tertiary);">michael@company.com</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge">Developer</span></td>
+                                    <td style="color: var(--color-text-tertiary);">1 day ago</td>
+                                    <td><span class="badge badge-success">Active</span></td>
+                                    <td>
+                                        <button class="btn btn-ghost btn-sm"><i data-lucide="more-horizontal"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div style="display: flex; align-items: center; gap: var(--space-3);">
+                                            <div style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);"></div>
+                                            <div>
+                                                <div style="font-weight: 600;">Emily Watson</div>
+                                                <div style="font-size: var(--font-size-sm); color: var(--color-text-tertiary);">emily@company.com</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge">Developer</span></td>
+                                    <td style="color: var(--color-text-tertiary);">3 days ago</td>
+                                    <td><span class="badge badge-success">Active</span></td>
+                                    <td>
+                                        <button class="btn btn-ghost btn-sm"><i data-lucide="more-horizontal"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div style="display: flex; align-items: center; gap: var(--space-3);">
+                                            <div style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);"></div>
+                                            <div>
+                                                <div style="font-weight: 600;">Alex Rivera</div>
+                                                <div style="font-size: var(--font-size-sm); color: var(--color-text-tertiary);">alex@company.com</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge">Viewer</span></td>
+                                    <td style="color: var(--color-text-tertiary);">1 week ago</td>
+                                    <td><span class="badge">Invited</span></td>
+                                    <td>
+                                        <button class="btn btn-ghost btn-sm"><i data-lucide="more-horizontal"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Billing Overview -->
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: var(--space-8); margin-top: var(--space-8);">
+                    <div class="glass-card">
+                        <div class="card-header" style="padding: var(--space-6); border-bottom: 1px solid var(--color-border);">
+                            <h2 style="font-size: var(--font-size-xl); margin-bottom: var(--space-1);">Current Usage</h2>
+                            <p style="font-size: var(--font-size-sm); color: var(--color-text-tertiary);">Professional Plan • Billing cycle resets in 12 days</p>
+                        </div>
+                        <div style="padding: var(--space-6);">
+                            <div style="margin-bottom: var(--space-8);">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
+                                    <span style="font-size: var(--font-size-sm); font-weight: 600;">API Calls</span>
+                                    <span style="font-size: var(--font-size-sm); color: var(--color-text-tertiary);">847,234 / 1,000,000</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-bar-fill" style="width: 85%;"></div>
+                                </div>
+                            </div>
+                            <div style="margin-bottom: var(--space-8);">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
+                                    <span style="font-size: var(--font-size-sm); font-weight: 600;">Storage</span>
+                                    <span style="font-size: var(--font-size-sm); color: var(--color-text-tertiary);">42 GB / 100 GB</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-bar-fill" style="width: 42%;"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
+                                    <span style="font-size: var(--font-size-sm); font-weight: 600;">Team Members</span>
+                                    <span style="font-size: var(--font-size-sm); color: var(--color-text-tertiary);">5 / 10</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-bar-fill" style="width: 50%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass-card">
+                        <div class="card-header" style="padding: var(--space-6); border-bottom: 1px solid var(--color-border);">
+                            <h2 style="font-size: var(--font-size-xl);">Next Invoice</h2>
+                        </div>
+                        <div style="padding: var(--space-6);">
+                            <div style="text-align: center; padding: var(--space-6); background: var(--color-surface-secondary); border-radius: var(--radius-xl); margin-bottom: var(--space-6);">
+                                <div style="font-size: var(--font-size-sm); color: var(--color-text-tertiary); margin-bottom: var(--space-2);">Due on Feb 24, 2025</div>
+                                <div style="font-size: var(--font-size-5xl); font-weight: 700; color: var(--color-primary);">$299</div>
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: var(--space-3); margin-bottom: var(--space-6);">
+                                <div style="display: flex; justify-content: space-between; font-size: var(--font-size-sm);">
+                                    <span style="color: var(--color-text-tertiary);">Base Plan</span>
+                                    <span style="font-weight: 600;">$299</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; font-size: var(--font-size-sm);">
+                                    <span style="color: var(--color-text-tertiary);">Additional API calls</span>
+                                    <span style="font-weight: 600;">$0</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; font-size: var(--font-size-sm);">
+                                    <span style="color: var(--color-text-tertiary);">Additional storage</span>
+                                    <span style="font-weight: 600;">$0</span>
+                                </div>
+                                <div style="height: 1px; background: var(--color-border);"></div>
+                                <div style="display: flex; justify-content: space-between; font-size: var(--font-size-base); font-weight: 600;">
+                                    <span>Total</span>
+                                    <span>$299</span>
+                                </div>
+                            </div>
+                            <button class="btn btn-ghost" style="width: 100%;">
+                                <i data-lucide="credit-card"></i>
+                                Update Payment Method
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Logs Viewer -->
+                <div class="glass-card" style="margin-top: var(--space-8);">
+                    <div class="card-header" style="padding: var(--space-6); border-bottom: 1px solid var(--color-border); display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h2 style="font-size: var(--font-size-xl); margin-bottom: var(--space-1);">System Logs</h2>
+                            <p style="font-size: var(--font-size-sm); color: var(--color-text-tertiary);">Real-time activity logs</p>
+                        </div>
+                        <div style="display: flex; gap: var(--space-2);">
+                            <select class="form-select" style="width: auto;">
+                                <option>All Agents</option>
+                                <option>Research Agent</option>
+                                <option>Code Agent</option>
+                                <option>Data Agent</option>
+                            </select>
+                            <select class="form-select" style="width: auto;">
+                                <option>All Levels</option>
+                                <option>Info</option>
+                                <option>Warning</option>
+                                <option>Error</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="padding: var(--space-6); font-family: var(--font-mono); font-size: var(--font-size-sm); background: var(--color-surface-secondary); max-height: 400px; overflow-y: auto;">
+                        <div style="padding: var(--space-2); border-left: 2px solid var(--color-success); padding-left: var(--space-4); margin-bottom: var(--space-2);">
+                            <span style="color: var(--color-text-tertiary);">[2025-02-12 14:23:15]</span>
+                            <span style="color: var(--color-success); margin: 0 var(--space-2);">[INFO]</span>
+                            <span style="color: var(--color-primary);">[research-agent-001]</span>
+                            <span style="color: var(--color-text-primary);"> Query processed successfully in 847ms</span>
+                        </div>
+                        <div style="padding: var(--space-2); border-left: 2px solid var(--color-success); padding-left: var(--space-4); margin-bottom: var(--space-2);">
+                            <span style="color: var(--color-text-tertiary);">[2025-02-12 14:23:10]</span>
+                            <span style="color: var(--color-success); margin: 0 var(--space-2);">[INFO]</span>
+                            <span style="color: var(--color-primary);">[code-agent-002]</span>
+                            <span style="color: var(--color-text-primary);"> Generated 247 lines of Python code</span>
+                        </div>
+                        <div style="padding: var(--space-2); border-left: 2px solid var(--color-warning); padding-left: var(--space-4); margin-bottom: var(--space-2);">
+                            <span style="color: var(--color-text-tertiary);">[2025-02-12 14:22:58]</span>
+                            <span style="color: var(--color-warning); margin: 0 var(--space-2);">[WARN]</span>
+                            <span style="color: var(--color-primary);">[data-agent-003]</span>
+                            <span style="color: var(--color-text-primary);"> High memory usage detected: 85%</span>
+                        </div>
+                        <div style="padding: var(--space-2); border-left: 2px solid var(--color-success); padding-left: var(--space-4); margin-bottom: var(--space-2);">
+                            <span style="color: var(--color-text-tertiary);">[2025-02-12 14:22:45]</span>
+                            <span style="color: var(--color-success); margin: 0 var(--space-2);">[INFO]</span>
+                            <span style="color: var(--color-primary);">[content-agent-004]</span>
+                            <span style="color: var(--color-text-primary);"> Content generated: 842 words</span>
+                        </div>
+                        <div style="padding: var(--space-2); border-left: 2px solid var(--color-success); padding-left: var(--space-4); margin-bottom: var(--space-2);">
+                            <span style="color: var(--color-text-tertiary);">[2025-02-12 14:22:32]</span>
+                            <span style="color: var(--color-success); margin: 0 var(--space-2);">[INFO]</span>
+                            <span style="color: var(--color-primary);">[ops-agent-005]</span>
+                            <span style="color: var(--color-text-primary);"> Workflow scheduled: daily-report</span>
+                        </div>
+                        <div style="padding: var(--space-2); border-left: 2px solid var(--color-success); padding-left: var(--space-4); margin-bottom: var(--space-2);">
+                            <span style="color: var(--color-text-tertiary);">[2025-02-12 14:22:18]</span>
+                            <span style="color: var(--color-success); margin: 0 var(--space-2);">[INFO]</span>
+                            <span style="color: var(--color-primary);">[api-gateway]</span>
+                            <span style="color: var(--color-text-primary);"> Health check passed</span>
+                        </div>
+                        <div style="padding: var(--space-2); border-left: 2px solid var(--color-error); padding-left: var(--space-4); margin-bottom: var(--space-2);">
+                            <span style="color: var(--color-text-tertiary);">[2025-02-12 14:22:05]</span>
+                            <span style="color: var(--color-error); margin: 0 var(--space-2);">[ERROR]</span>
+                            <span style="color: var(--color-primary);">[research-agent-001]</span>
+                            <span style="color: var(--color-text-primary);"> Rate limit exceeded, retrying in 30s</span>
+                        </div>
+                        <div style="padding: var(--space-2); border-left: 2px solid var(--color-success); padding-left: var(--space-4); margin-bottom: var(--space-2);">
+                            <span style="color: var(--color-text-tertiary);">[2025-02-12 14:21:52]</span>
+                            <span style="color: var(--color-success); margin: 0 var(--space-2);">[INFO]</span>
+                            <span style="color: var(--color-primary);">[data-agent-003]</span>
+                            <span style="color: var(--color-text-primary);"> Database query completed: 1.2M records in 2.3s</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Integrations Grid -->
+                <div class="glass-card" style="margin-top: var(--space-8);">
+                    <div class="card-header" style="padding: var(--space-6); border-bottom: 1px solid var(--color-border); display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h2 style="font-size: var(--font-size-xl); margin-bottom: var(--space-1);">Active Integrations</h2>
+                            <p style="font-size: var(--font-size-sm); color: var(--color-text-tertiary);">Connected tools and services</p>
+                        </div>
+                        <button class="btn btn-primary">
+                            <i data-lucide="plus"></i>
+                            Add Integration
+                        </button>
+                    </div>
+                    <div style="padding: var(--space-6); display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: var(--space-4);">
+                        <div class="glass-card" style="padding: var(--space-4); display: flex; align-items: center; gap: var(--space-4);">
+                            <div style="width: 48px; height: 48px; border-radius: var(--radius-lg); background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <i data-lucide="database" style="width: 24px; height: 24px; color: white;"></i>
+                            </div>
+                            <div style="flex: 1;">
+                                <div style="font-weight: 600; margin-bottom: 4px;">PostgreSQL</div>
+                                <div style="font-size: var(--font-size-xs); color: var(--color-text-tertiary);">Connected</div>
+                            </div>
+                            <span class="badge badge-success">Active</span>
+                        </div>
+
+                        <div class="glass-card" style="padding: var(--space-4); display: flex; align-items: center; gap: var(--space-4);">
+                            <div style="width: 48px; height: 48px; border-radius: var(--radius-lg); background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <i data-lucide="message-square" style="width: 24px; height: 24px; color: white;"></i>
+                            </div>
+                            <div style="flex: 1;">
+                                <div style="font-weight: 600; margin-bottom: 4px;">Slack</div>
+                                <div style="font-size: var(--font-size-xs); color: var(--color-text-tertiary);">Connected</div>
+                            </div>
+                            <span class="badge badge-success">Active</span>
+                        </div>
+
+                        <div class="glass-card" style="padding: var(--space-4); display: flex; align-items: center; gap: var(--space-4);">
+                            <div style="width: 48px; height: 48px; border-radius: var(--radius-lg); background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <i data-lucide="git-branch" style="width: 24px; height: 24px; color: white;"></i>
+                            </div>
+                            <div style="flex: 1;">
+                                <div style="font-weight: 600; margin-bottom: 4px;">GitHub</div>
+                                <div style="font-size: var(--font-size-xs); color: var(--color-text-tertiary);">Connected</div>
+                            </div>
+                            <span class="badge badge-success">Active</span>
+                        </div>
+
+                        <div class="glass-card" style="padding: var(--space-4); display: flex; align-items: center; gap: var(--space-4);">
+                            <div style="width: 48px; height: 48px; border-radius: var(--radius-lg); background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <i data-lucide="mail" style="width: 24px; height: 24px; color: white;"></i>
+                            </div>
+                            <div style="flex: 1;">
+                                <div style="font-weight: 600; margin-bottom: 4px;">SendGrid</div>
+                                <div style="font-size: var(--font-size-xs); color: var(--color-text-tertiary);">Connected</div>
+                            </div>
+                            <span class="badge badge-success">Active</span>
+                        </div>
+
+                        <div class="glass-card" style="padding: var(--space-4); display: flex; align-items: center; gap: var(--space-4);">
+                            <div style="width: 48px; height: 48px; border-radius: var(--radius-lg); background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <i data-lucide="cloud" style="width: 24px; height: 24px; color: white;"></i>
+                            </div>
+                            <div style="flex: 1;">
+                                <div style="font-weight: 600; margin-bottom: 4px;">AWS S3</div>
+                                <div style="font-size: var(--font-size-xs); color: var(--color-text-tertiary);">Connected</div>
+                            </div>
+                            <span class="badge badge-success">Active</span>
+                        </div>
+
+                        <div class="glass-card" style="padding: var(--space-4); display: flex; align-items: center; gap: var(--space-4);">
+                            <div style="width: 48px; height: 48px; border-radius: var(--radius-lg); background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <i data-lucide="box" style="width: 24px; height: 24px; color: #607ea2;"></i>
+                            </div>
+                            <div style="flex: 1;">
+                                <div style="font-weight: 600; margin-bottom: 4px;">Jira</div>
+                                <div style="font-size: var(--font-size-xs); color: var(--color-text-tertiary);">Connected</div>
+                            </div>
+                            <span class="badge badge-success">Active</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Preview -->
+                <div class="glass-card" style="margin-top: var(--space-8);">
+                    <div class="card-header" style="padding: var(--space-6); border-bottom: 1px solid var(--color-border);">
+                        <h2 style="font-size: var(--font-size-xl); margin-bottom: var(--space-1);">Quick Settings</h2>
+                        <p style="font-size: var(--font-size-sm); color: var(--color-text-tertiary);">Frequently accessed settings</p>
+                    </div>
+                    <div style="padding: var(--space-6);">
+                        <div class="settings-row">
+                            <div>
+                                <div class="settings-label-title">Email Notifications</div>
+                                <div class="settings-label-description">Receive email alerts for important events</div>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" checked>
+                                <div class="toggle-switch"></div>
+                            </label>
+                        </div>
+                        <div class="settings-row">
+                            <div>
+                                <div class="settings-label-title">Slack Integration</div>
+                                <div class="settings-label-description">Send notifications to Slack channels</div>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" checked>
+                                <div class="toggle-switch"></div>
+                            </label>
+                        </div>
+                        <div class="settings-row">
+                            <div>
+                                <div class="settings-label-title">Auto-scaling</div>
+                                <div class="settings-label-description">Automatically scale resources based on load</div>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox">
+                                <div class="toggle-switch"></div>
+                            </label>
+                        </div>
+                        <div class="settings-row">
+                            <div>
+                                <div class="settings-label-title">Debug Mode</div>
+                                <div class="settings-label-description">Enable verbose logging for troubleshooting</div>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox">
+                                <div class="toggle-switch"></div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script src="main.js"></script>
+    <script src="dashboard.js"></script>
+</body>
+</html>
