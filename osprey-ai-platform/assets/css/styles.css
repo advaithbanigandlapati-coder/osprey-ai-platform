@@ -121,8 +121,8 @@
   --shadow-glow-sm: 0 0 12px rgba(96,126,162,0.30);
 
   /* ── TYPOGRAPHY ────────────────────────────────────────────────────────── */
---font-display: Optima, 'Optima nova', 'Segoe UI', Candara, 'Noto Sans', 'Helvetica Neue', sans-serif;
-  --font-heading: Optima, 'Optima nova', 'Segoe UI', Candara, 'Noto Sans', 'Helvetica Neue', sans-serif;
+--font-display: Optima, Optima-Regular, 'URW Classico', 'Apple Chancery', 'Segoe UI', sans-serif;
+  --font-heading: Optima, Optima-Regular, 'URW Classico', 'Apple Chancery', 'Segoe UI', sans-serif;
   --font-body:    'DM Sans', 'Optima', -apple-system, sans-serif;
   --font-mono:    'JetBrains Mono', 'Menlo', 'Monaco', monospace;
   --font-serif:   'Cormorant Garamond', 'Garamond', 'Georgia', serif;
@@ -385,25 +385,17 @@ body {
 
 /* ── TYPOGRAPHY BASE ────────────────────────────────────────────────────── */
 h1, h2, h3, h4, h5, h6 {
-  font-family: Optima, 'Optima nova', 'Segoe UI', Candara, 'Noto Sans', 'Helvetica Neue', sans-serif !important;
+  font-family: Optima, Optima-Regular, 'URW Classico', sans-serif;
   font-weight: 400;
   line-height: var(--leading-tight);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
   color: var(--color-text);
   transition: color var(--transition-slow);
 }
 
-h1 { 
-  font-size: var(--text-hero);  
-  letter-spacing: -0.03em; 
-  font-weight: 500 !important;
-}
-
-h2 { 
-  font-size: var(--text-5xl);  
-  font-weight: 500 !important;
-}
-h3 { font-size: var(--text-4xl);  font-weight: 500; }
+h1 { font-size: var(--text-hero); letter-spacing: -0.025em; font-weight: 400; }
+h2 { font-size: var(--text-5xl); font-weight: 400; }
+h3 { font-size: var(--text-4xl); font-weight: 400; }
 h4 { font-size: var(--text-3xl);  }
 h5 { font-size: var(--text-2xl);  }
 h6 { font-size: var(--text-xl);   }
@@ -867,6 +859,14 @@ body::after {
   padding: 0 var(--space-8);
 }
 
+.navbar-menu {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+  flex: 1;
+  margin-left: var(--space-16);
+}
+
 /* ── Logo ───────────────────────────────────────────────────────────────── */
 
 .navbar-logo {
@@ -900,7 +900,8 @@ body::after {
 .navbar-links {
   display: flex;
   align-items: center;
-  gap: var(--space-1);
+  gap: var(--space-6);
+  flex: 1;
 }
 
 .navbar-link {
@@ -986,6 +987,7 @@ body::after {
   display: flex;
   align-items: center;
   gap: var(--space-3);
+  margin-left: auto;
 }
 
 /* ── Theme toggle ───────────────────────────────────────────────────────── */
