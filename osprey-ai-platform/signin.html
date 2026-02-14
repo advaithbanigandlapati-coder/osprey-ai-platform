@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - Osprey AI Agentic Studio</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="auth-page">
+    <div class="auth-container">
+        <div class="auth-left">
+            <div class="auth-branding">
+                <div class="auth-logo">
+                    <span class="logo-icon">🦅</span>
+                    <span class="logo-text">Osprey AI</span>
+                </div>
+                <h1>Agentic Studio</h1>
+                <p class="auth-tagline">
+                    Enterprise Agent Production Infrastructure
+                </p>
+                
+                <div class="auth-features">
+                    <div class="auth-feature">
+                        <span class="feature-icon">🤖</span>
+                        <div class="feature-text">
+                            <h3>Deploy AI Agents</h3>
+                            <p>Create and manage intelligent agents at scale</p>
+                        </div>
+                    </div>
+                    
+                    <div class="auth-feature">
+                        <span class="feature-icon">📊</span>
+                        <div class="feature-text">
+                            <h3>Real-Time Analytics</h3>
+                            <p>Monitor performance and optimize operations</p>
+                        </div>
+                    </div>
+                    
+                    <div class="auth-feature">
+                        <span class="feature-icon">🔒</span>
+                        <div class="feature-text">
+                            <h3>Enterprise Security</h3>
+                            <p>SOC 2 compliant with end-to-end encryption</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="auth-stats">
+                    <div class="auth-stat">
+                        <div class="stat-number">99.99%</div>
+                        <div class="stat-label">Uptime</div>
+                    </div>
+                    <div class="auth-stat">
+                        <div class="stat-number">500M+</div>
+                        <div class="stat-label">Requests/mo</div>
+                    </div>
+                    <div class="auth-stat">
+                        <div class="stat-number">< 200ms</div>
+                        <div class="stat-label">Response</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="auth-right">
+            <div class="auth-form-container">
+                <div class="auth-header">
+                    <h2>Sign In to Agentic Studio</h2>
+                    <p>Enter your credentials to access your dashboard</p>
+                </div>
+                
+                <form id="signin-form" class="auth-form" onsubmit="handleSignIn(event)">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input 
+                            type="text" 
+                            id="username" 
+                            name="username" 
+                            class="form-input"
+                            placeholder="Enter your username"
+                            required
+                            autocomplete="username"
+                        >
+                        <span class="form-hint">Use Admin@B or User@B for demo</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            class="form-input"
+                            placeholder="Enter your password"
+                            required
+                            autocomplete="current-password"
+                        >
+                        <span class="form-hint">Use Admin123 or User123 for demo</span>
+                    </div>
+                    
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="remember">
+                            <span>Remember me</span>
+                        </label>
+                        <a href="#" class="forgot-password" onclick="handleForgotPassword(event)">
+                            Forgot password?
+                        </a>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-large btn-block" id="signin-button">
+                        <span class="btn-text">Sign In</span>
+                        <span class="btn-loader" style="display: none;">
+                            <span class="spinner"></span>
+                        </span>
+                    </button>
+                    
+                    <div id="error-message" class="error-message" style="display: none;"></div>
+                </form>
+                
+                <div class="auth-demo-accounts">
+                    <h3>Demo Accounts</h3>
+                    <div class="demo-accounts-grid">
+                        <div class="demo-account" onclick="fillDemoAccount('admin')">
+                            <div class="demo-icon">👑</div>
+                            <div class="demo-info">
+                                <strong>Admin Account</strong>
+                                <span>Full system access</span>
+                                <code>Admin@B / Admin123</code>
+                            </div>
+                        </div>
+                        
+                        <div class="demo-account" onclick="fillDemoAccount('user')">
+                            <div class="demo-icon">👤</div>
+                            <div class="demo-info">
+                                <strong>User Account</strong>
+                                <span>Standard user access</span>
+                                <code>User@B / User123</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="auth-divider">
+                    <span>or</span>
+                </div>
+                
+                <div class="auth-alternative">
+                    <p>New to Osprey AI?</p>
+                    <a href="mailto:sales@ospreyai.com" class="btn btn-secondary btn-block">
+                        Contact Sales for Enterprise Access
+                    </a>
+                </div>
+                
+                <div class="auth-footer">
+                    <a href="/">← Back to Home</a>
+                    <div class="auth-links">
+                        <a href="#privacy">Privacy Policy</a>
+                        <a href="#terms">Terms of Service</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+
+    <script>
+        // Handle sign in form submission
+        async function handleSignIn(event) {
+            event.preventDefault();
+            
+            const button = document.getElementById('signin-button');
+            const buttonText = button.querySelector('.btn-text');
+            const buttonLoader = button.querySelector('.btn-loader');
+            const errorMessage = document.getElementById('error-message');
+            
+            // Get form data
+            const formData = new FormData(event.target);
+            const credentials = {
+                username: formData.get('username'),
+                password: formData.get('password')
+            };
+            
+            // Show loading state
+            button.disabled = true;
+            buttonText.style.display = 'none';
+            buttonLoader.style.display = 'inline-block';
+            errorMessage.style.display = 'none';
+            
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify(credentials)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    showToast('Sign in successful! Redirecting...', 'success');
+                    
+                    setTimeout(() => {
+                        window.location.href = '/dashboard';
+                    }, 1000);
+                } else {
+                    throw new Error(data.error || 'Invalid credentials');
+                }
+            } catch (error) {
+                console.error('Sign in error:', error);
+                errorMessage.textContent = error.message || 'Invalid username or password. Please try again.';
+                errorMessage.style.display = 'block';
+                showToast(error.message || 'Sign in failed', 'error');
+                
+                // Reset button state
+                button.disabled = false;
+                buttonText.style.display = 'inline';
+                buttonLoader.style.display = 'none';
+            }
+        }
+        
+        // Handle forgot password
+        function handleForgotPassword(event) {
+            event.preventDefault();
+            showToast('Password reset feature is not set up yet. Please contact your administrator.', 'info');
+        }
+        
+        // Fill demo account credentials
+        function fillDemoAccount(type) {
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            
+            if (type === 'admin') {
+                usernameInput.value = 'Admin@B';
+                passwordInput.value = 'Admin123';
+            } else {
+                usernameInput.value = 'User@B';
+                passwordInput.value = 'User123';
+            }
+            
+            showToast(`Demo credentials filled for ${type} account`, 'info');
+        }
+        
+        // Toast notification function
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            
+            const icon = {
+                success: '✅',
+                error: '❌',
+                warning: '⚠️',
+                info: 'ℹ️'
+            }[type] || 'ℹ️';
+            
+            toast.innerHTML = `
+                <span class="toast-icon">${icon}</span>
+                <span class="toast-message">${message}</span>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => toast.classList.add('show'), 10);
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+        
+        // Auto-fill on page load for demo purposes
+        window.addEventListener('DOMContentLoaded', () => {
+            console.log('🔐 Osprey AI Agentic Studio - Sign In');
+            console.log('Demo Accounts:');
+            console.log('  Admin: Admin@B / Admin123');
+            console.log('  User:  User@B / User123');
+        });
+    </script>
+</body>
+</html>
