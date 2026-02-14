@@ -358,8 +358,7 @@ body {
   font-size: var(--text-base);
   line-height: var(--leading-normal);
   color: var(--color-text);
-  background-color: var(--color-bg);
-  background-image: var(--grad-mesh);
+  background: linear-gradient(135deg, #e8f3fa 0%, #f8fbfd 50%, #e3eef8 100%);
   background-attachment: fixed;
   min-height: 100vh;
   overflow-x: hidden;
@@ -441,35 +440,15 @@ body::before {
   position: fixed;
   inset: 0;
   z-index: -2;
-  pointer-events: none;
-  /* Multi-beam prismatic light — visible, dramatic, color-shifting */
-  background:
-    conic-gradient(from 210deg at 15% 10%,
-      transparent 0deg,
-      rgba(30,139,200,0.22) 15deg,
-      rgba(91,196,224,0.18) 28deg,
-      transparent 42deg,
-      transparent 90deg,
-      rgba(79,126,200,0.16) 105deg,
-      rgba(124,92,200,0.12) 118deg,
-      transparent 132deg,
-      transparent 180deg,
-      rgba(15,168,184,0.20) 195deg,
-      rgba(34,211,238,0.16) 208deg,
-      transparent 222deg
-    ),
-    conic-gradient(from 30deg at 85% 85%,
-      transparent 0deg,
-      rgba(91,196,224,0.18) 12deg,
-      rgba(30,139,200,0.22) 25deg,
-      transparent 38deg,
-      transparent 100deg,
-      rgba(124,92,200,0.14) 112deg,
-      rgba(79,126,200,0.12) 125deg,
-      transparent 140deg
-    );
-  animation: auroraShift 18s ease-in-out infinite alternate;
+  background: 
+    radial-gradient(circle at 25% 25%, rgba(122,179,212,0.12) 0%, transparent 55%),
+    radial-gradient(circle at 75% 15%, rgba(90,143,196,0.10) 0%, transparent 55%),
+    radial-gradient(circle at 15% 70%, rgba(96,126,162,0.11) 0%, transparent 50%),
+    radial-gradient(circle at 80% 65%, rgba(79,168,184,0.09) 0%, transparent 50%),
+    radial-gradient(circle at 40% 90%, rgba(129,151,172,0.10) 0%, transparent 45%);
+  animation: meshMove 45s ease-in-out infinite;
   opacity: 1;
+  pointer-events: none;
 }
 
 @keyframes auroraShift {
@@ -488,6 +467,18 @@ body::before {
   100% {
     transform: scale(1.04) rotate(4deg);
     filter: hue-rotate(30deg) saturate(1.5);
+  }
+}
+
+@keyframes meshMove {
+  0%,100% { 
+    background-position: 0% 0%, 100% 0%, 0% 100%, 100% 100%, 50% 90%; 
+  }
+  33% {
+    background-position: 10% 20%, 90% 10%, 5% 85%, 95% 70%, 45% 85%;
+  }
+  66% { 
+    background-position: 15% 30%, 85% 20%, 10% 75%, 90% 60%, 40% 80%; 
   }
 }
 
@@ -520,14 +511,12 @@ body:not([data-theme="dark"])::after {
 
 [data-theme="dark"] body::before {
   background:
-    /* Nebula clouds — vivid colored masses */
-    radial-gradient(ellipse 90% 60% at 15% 25%, rgba(30,100,180,0.55) 0%, rgba(15,168,184,0.25) 40%, transparent 70%),
-    radial-gradient(ellipse 70% 80% at 88% 15%, rgba(124,92,200,0.50) 0%, rgba(79,126,200,0.30) 40%, transparent 68%),
-    radial-gradient(ellipse 80% 50% at 60% 80%, rgba(15,168,184,0.45) 0%, rgba(10,100,160,0.25) 45%, transparent 72%),
-    radial-gradient(ellipse 55% 70% at 5%  75%, rgba(30,139,200,0.40) 0%, rgba(124,92,200,0.20) 45%, transparent 70%),
-    radial-gradient(ellipse 65% 45% at 95% 60%, rgba(34,211,238,0.35) 0%, rgba(30,100,180,0.18) 50%, transparent 70%),
-    radial-gradient(ellipse 40% 40% at 50% 40%, rgba(91,196,224,0.18) 0%, transparent 60%);
-  animation: nebulaBreath 28s ease-in-out infinite;
+    radial-gradient(circle at 25% 25%, rgba(49,75,110,0.18) 0%, transparent 55%),
+    radial-gradient(circle at 75% 15%, rgba(79,168,184,0.12) 0%, transparent 55%),
+    radial-gradient(circle at 15% 70%, rgba(96,126,162,0.14) 0%, transparent 50%),
+    radial-gradient(circle at 80% 65%, rgba(49,75,110,0.16) 0%, transparent 50%),
+    radial-gradient(circle at 40% 90%, rgba(79,168,184,0.10) 0%, transparent 45%);
+  animation: meshMove 45s ease-in-out infinite;
   opacity: 1;
 }
 
@@ -1847,7 +1836,7 @@ body:not([data-theme="dark"]) {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: calc(var(--navbar-height) + var(--space-16)) var(--space-8) var(--space-24);
+  padding: var(--space-8);
   overflow: hidden;
 }
 
@@ -1858,10 +1847,10 @@ body:not([data-theme="dark"]) {
   text-align: center;
   position: relative;
   z-index: 2;
-  padding: 0 var(--space-8);
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
 }
 
 .hero-eyebrow {
