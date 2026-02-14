@@ -227,11 +227,101 @@
                         </div>
                     </div>
 
-                    <a href="pricing.html" class="navbar-link">Pricing</a>
+                    <!-- Pricing Dropdown -->
+                    <div class="nav-dropdown">
+                        <a href="pricing.html" class="navbar-link">Pricing</a>
+                        <div class="nav-dropdown-menu" style="min-width: 520px; left: 50%; transform: translateX(-50%);">
+                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-6); padding: var(--space-4);">
+                                <div>
+                                    <h4 style="font-size: var(--text-xs); font-weight: 700; letter-spacing: var(--tracking-widest); text-transform: uppercase; color: var(--color-text-muted); margin-bottom: var(--space-3); padding: 0 var(--space-2);">Plans</h4>
+                                    <a href="pricing-starter.html" class="nav-dropdown-item">
+                                        <i data-lucide="rocket"></i>
+                                        <span>Starter Plan</span>
+                                    </a>
+                                    <a href="pricing-professional.html" class="nav-dropdown-item">
+                                        <i data-lucide="briefcase"></i>
+                                        <span>Professional Plan</span>
+                                    </a>
+                                    <a href="pricing-enterprise.html" class="nav-dropdown-item">
+                                        <i data-lucide="building"></i>
+                                        <span>Enterprise Plan</span>
+                                    </a>
+                                    <a href="pricing-comparison.html" class="nav-dropdown-item">
+                                        <i data-lucide="git-compare"></i>
+                                        <span>Plan Comparison</span>
+                                    </a>
+                                </div>
+                                <div>
+                                    <h4 style="font-size: var(--text-xs); font-weight: 700; letter-spacing: var(--tracking-widest); text-transform: uppercase; color: var(--color-text-muted); margin-bottom: var(--space-3); padding: 0 var(--space-2);">Resources</h4>
+                                    <a href="pricing-calculator.html" class="nav-dropdown-item">
+                                        <i data-lucide="calculator"></i>
+                                        <span>Pricing Calculator</span>
+                                    </a>
+                                    <a href="pricing-faq.html" class="nav-dropdown-item">
+                                        <i data-lucide="help-circle"></i>
+                                        <span>Pricing FAQ</span>
+                                    </a>
+                                    <a href="pricing-custom.html" class="nav-dropdown-item">
+                                        <i data-lucide="settings"></i>
+                                        <span>Custom Pricing</span>
+                                    </a>
+                                    <a href="pricing.html" class="nav-dropdown-item">
+                                        <i data-lucide="dollar-sign"></i>
+                                        <span>View All Pricing</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     
-                    <a href="enterprise.html" class="navbar-link">Enterprise</a>
-                    
-                    <a href="docs.html" class="navbar-link">Docs</a>
+                    <!-- Enterprise Dropdown -->
+                    <div class="nav-dropdown">
+                        <a href="enterprise.html" class="navbar-link">Enterprise</a>
+                        <div class="nav-dropdown-menu" style="min-width: 520px; left: 50%; transform: translateX(-50%);">
+                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-6); padding: var(--space-4);">
+                                <div>
+                                    <h4 style="font-size: var(--text-xs); font-weight: 700; letter-spacing: var(--tracking-widest); text-transform: uppercase; color: var(--color-text-muted); margin-bottom: var(--space-3); padding: 0 var(--space-2);">Solutions</h4>
+                                    <a href="enterprise-security.html" class="nav-dropdown-item">
+                                        <i data-lucide="shield-check"></i>
+                                        <span>Enterprise Security</span>
+                                    </a>
+                                    <a href="enterprise-deployment.html" class="nav-dropdown-item">
+                                        <i data-lucide="server"></i>
+                                        <span>Deployment Options</span>
+                                    </a>
+                                    <a href="enterprise-support.html" class="nav-dropdown-item">
+                                        <i data-lucide="headphones"></i>
+                                        <span>Enterprise Support</span>
+                                    </a>
+                                    <a href="enterprise-sla.html" class="nav-dropdown-item">
+                                        <i data-lucide="file-check"></i>
+                                        <span>Service Level Agreement</span>
+                                    </a>
+                                </div>
+                                <div>
+                                    <h4 style="font-size: var(--text-xs); font-weight: 700; letter-spacing: var(--tracking-widest); text-transform: uppercase; color: var(--color-text-muted); margin-bottom: var(--space-3); padding: 0 var(--space-2);">Services</h4>
+                                    <a href="enterprise-compliance.html" class="nav-dropdown-item">
+                                        <i data-lucide="award"></i>
+                                        <span>Compliance & Certifications</span>
+                                    </a>
+                                    <a href="enterprise-migration.html" class="nav-dropdown-item">
+                                        <i data-lucide="arrow-right-circle"></i>
+                                        <span>Migration Services</span>
+                                    </a>
+                                    <a href="enterprise-training.html" class="nav-dropdown-item">
+                                        <i data-lucide="graduation-cap"></i>
+                                        <span>Enterprise Training</span>
+                                    </a>
+                                    <a href="enterprise.html" class="nav-dropdown-item">
+                                        <i data-lucide="building"></i>
+                                        <span>Enterprise Overview</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="#docs" class="navbar-link">Docs</a>
                 </div>
                 <div class="navbar-actions">
                     <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
@@ -450,30 +540,20 @@
         </div>
         <div class="footer-bottom">
             <p class="footer-copyright">&copy; 2025 Osprey AI Labs. All rights reserved.</p>
-            <div class="footer-legal">
-                <span style="color: var(--color-text-tertiary); font-size: var(--font-size-sm);">Made with ❤️ for enterprises</span>
-            </div>
         </div>
     </footer>
 
-    <!-- Scripts -->
     <script src="https://unpkg.com/lucide@0.293.0/dist/umd/lucide.min.js"></script>
     <script>
-        // Initialize Lucide Icons immediately
         if (typeof lucide !== 'undefined') {
             lucide.createIcons();
         }
-        
-        // Also initialize after DOM is loaded (for dynamic content)
         document.addEventListener('DOMContentLoaded', function() {
             if (typeof lucide !== 'undefined') {
                 lucide.createIcons();
-            } else {
-                console.error('Lucide library not loaded - please check your internet connection');
             }
         });
 
-        // Theme Toggle
         const themeToggle = document.getElementById('themeToggle');
         const html = document.documentElement;
         
@@ -481,100 +561,30 @@
             html.setAttribute('data-theme', theme);
             localStorage.setItem('theme', theme);
             
-            // Toggle theme button icons
-            const sunIcon = themeToggle.querySelector('.sun-icon');
-            const moonIcon = themeToggle.querySelector('.moon-icon');
-            
-            if (theme === 'dark') {
-                sunIcon.style.display = 'none';
-                moonIcon.style.display = 'block';
-            } else {
-                sunIcon.style.display = 'block';
-                moonIcon.style.display = 'none';
+            if (themeToggle) {
+                const sunIcon = themeToggle.querySelector('.sun-icon');
+                const moonIcon = themeToggle.querySelector('.moon-icon');
+                
+                if (theme === 'dark') {
+                    if (sunIcon) sunIcon.style.display = 'none';
+                    if (moonIcon) moonIcon.style.display = 'block';
+                } else {
+                    if (sunIcon) sunIcon.style.display = 'block';
+                    if (moonIcon) moonIcon.style.display = 'none';
+                }
             }
         }
         
-        themeToggle.addEventListener('click', () => {
-            const currentTheme = html.getAttribute('data-theme');
-            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-            updateTheme(newTheme);
-        });
-
-        // Load saved theme on page load
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        updateTheme(savedTheme);
-
-        // Particle Canvas Animation
-        const canvas = document.getElementById('particleCanvas');
-        if (canvas) {
-            const ctx = canvas.getContext('2d');
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-
-            const particles = [];
-            const particleCount = 50;
-
-            class Particle {
-                constructor() {
-                    this.x = Math.random() * canvas.width;
-                    this.y = Math.random() * canvas.height;
-                    this.vx = (Math.random() - 0.5) * 0.5;
-                    this.vy = (Math.random() - 0.5) * 0.5;
-                    this.radius = Math.random() * 2 + 1;
-                }
-
-                update() {
-                    this.x += this.vx;
-                    this.y += this.vy;
-
-                    if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
-                    if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
-                }
-
-                draw() {
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                    ctx.fillStyle = 'rgba(96, 126, 162, 0.3)';
-                    ctx.fill();
-                }
-            }
-
-            for (let i = 0; i < particleCount; i++) {
-                particles.push(new Particle());
-            }
-
-            function animate() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                particles.forEach(particle => {
-                    particle.update();
-                    particle.draw();
-                });
-                requestAnimationFrame(animate);
-            }
-
-            animate();
-
-            window.addEventListener('resize', () => {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
+        if (themeToggle) {
+            themeToggle.addEventListener('click', () => {
+                const currentTheme = html.getAttribute('data-theme');
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                updateTheme(newTheme);
             });
         }
 
-        // Scroll Animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.scroll-animate').forEach(el => observer.observe(el));
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        updateTheme(savedTheme);
     </script>
 </body>
 </html>
