@@ -3,13 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Contact Osprey AI Labs - Get in touch with our team">
     <title>Contact Us - Osprey AI Labs</title>
     <link rel="stylesheet" href="assets/css/styles.css">
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="icon" type="image/svg+xml" href="assets/images/osprey-logo.svg">
 </head>
 <body>
-    <!-- Navigation -->
     <nav class="navbar">
         <div class="navbar-content">
             <a href="index.html" class="navbar-logo">
@@ -21,118 +19,138 @@
                 <span>Osprey AI Labs</span>
             </a>
             <div class="navbar-menu">
-                <div class="navbar-links">
-                    <a href="index.html#features" class="navbar-link">Features</a>
-                    <a href="index.html#pricing" class="navbar-link">Pricing</a>
-                    <a href="index.html#docs" class="navbar-link">Docs</a>
-                </div>
                 <div class="navbar-actions">
-                    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-                        <i data-lucide="sun" class="sun-icon"></i>
-                        <i data-lucide="moon" class="moon-icon" style="display: none;"></i>
-                    </button>
                     <a href="dashboard.html" class="btn btn-primary">Agent Studio</a>
+                    <a href="index.html" class="btn btn-ghost">Back to Home</a>
                 </div>
             </div>
         </div>
     </nav>
 
-    <main class="contact-page">
-        <div class="contact-container">
-            <div class="contact-card">
-                <div class="contact-header">
-                    <h1 class="contact-title">Let's Talk</h1>
-                    <p class="contact-subtitle">
-                        Get in touch with our team. We'll respond within 24 hours.
-                    </p>
-                </div>
-
-                <form class="contact-form" id="contactForm">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label" for="firstName">First Name *</label>
-                            <input type="text" id="firstName" class="form-input" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="lastName">Last Name *</label>
-                            <input type="text" id="lastName" class="form-input" required>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label" for="email">Work Email *</label>
-                            <input type="email" id="email" class="form-input" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="company">Company</label>
-                            <input type="text" id="company" class="form-input">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label" for="subject">Subject *</label>
-                        <select id="subject" class="form-select" required>
-                            <option value="">Select a topic...</option>
-                            <option value="sales">Sales Inquiry</option>
-                            <option value="demo">Request Demo</option>
-                            <option value="support">Technical Support</option>
-                            <option value="partnership">Partnership Opportunity</option>
-                            <option value="other">Other</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label" for="message">Message *</label>
-                        <textarea id="message" class="form-input form-textarea" rows="6" required></textarea>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">
-                        <i data-lucide="send"></i>
-                        Send Message
-                    </button>
-
-                    <p style="font-size: var(--font-size-sm); color: var(--color-text-tertiary); text-align: center; margin-top: var(--space-4);">
-                        By submitting this form, you agree to our <a href="#" style="color: var(--color-primary);">Privacy Policy</a>
-                    </p>
-                </form>
+    <main style="margin-top: var(--navbar-height); padding: var(--space-20) var(--space-8);">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge"><i data-lucide="mail"></i> Get in Touch</span>
+                <h1 class="section-title">Contact Our Team</h1>
+                <p class="section-subtitle">Have questions? We're here to help. Reach out to discuss how Osprey AI can transform your operations.</p>
             </div>
 
-            <!-- Contact Info Cards -->
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-6); margin-top: var(--space-12);">
-                <div class="glass-card" style="text-align: center; padding: var(--space-6);">
-                    <div style="width: 48px; height: 48px; border-radius: var(--radius-full); background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-4);">
-                        <i data-lucide="mail" style="width: 24px; height: 24px; color: white;"></i>
+            <div class="contact-grid">
+                <div class="contact-info-card">
+                    <h2 class="contact-info-title">Let's Talk</h2>
+                    
+                    <div class="contact-item">
+                        <div class="contact-item-label">Sales Inquiries</div>
+                        <div class="contact-item-value">sales@ospreyai.com</div>
                     </div>
-                    <h3 style="font-size: var(--font-size-base); font-weight: 600; margin-bottom: var(--space-2);">Email Us</h3>
-                    <p style="font-size: var(--font-size-sm); color: var(--color-text-secondary);">hello@ospreyai.com</p>
-                </div>
-                <div class="glass-card" style="text-align: center; padding: var(--space-6);">
-                    <div style="width: 48px; height: 48px; border-radius: var(--radius-full); background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-4);">
-                        <i data-lucide="phone" style="width: 24px; height: 24px; color: white;"></i>
+
+                    <div class="contact-item">
+                        <div class="contact-item-label">Support</div>
+                        <div class="contact-item-value">support@ospreyai.com</div>
                     </div>
-                    <h3 style="font-size: var(--font-size-base); font-weight: 600; margin-bottom: var(--space-2);">Call Us</h3>
-                    <p style="font-size: var(--font-size-sm); color: var(--color-text-secondary);">+1 (555) 123-4567</p>
-                </div>
-                <div class="glass-card" style="text-align: center; padding: var(--space-6);">
-                    <div style="width: 48px; height: 48px; border-radius: var(--radius-full); background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-4);">
-                        <i data-lucide="map-pin" style="width: 24px; height: 24px; color: white;"></i>
+
+                    <div class="contact-item">
+                        <div class="contact-item-label">Phone</div>
+                        <div class="contact-item-value">+1 (555) 123-4567</div>
                     </div>
-                    <h3 style="font-size: var(--font-size-base); font-weight: 600; margin-bottom: var(--space-2);">Visit Us</h3>
-                    <p style="font-size: var(--font-size-sm); color: var(--color-text-secondary);">San Francisco, CA</p>
+
+                    <div class="contact-item">
+                        <div class="contact-item-label">Office Hours</div>
+                        <div class="contact-item-value">Mon - Fri, 9AM - 6PM EST</div>
+                    </div>
                 </div>
+
+                <div class="contact-form-card">
+                    <h2 class="contact-form-title">Send us a Message</h2>
+                    
+                    <form style="display: flex; flex-direction: column; gap: var(--space-6);">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">First Name</label>
+                                <input type="text" class="form-input" placeholder="John" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Last Name</label>
+                                <input type="text" class="form-input" placeholder="Doe" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Work Email</label>
+                            <input type="email" class="form-input" placeholder="john@company.com" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Company Name</label>
+                            <input type="text" class="form-input" placeholder="Acme Corporation" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Company Size</label>
+                            <select class="form-select" required>
+                                <option value="">Select company size</option>
+                                <option value="1-10">1-10 employees</option>
+                                <option value="11-50">11-50 employees</option>
+                                <option value="51-200">51-200 employees</option>
+                                <option value="201-1000">201-1,000 employees</option>
+                                <option value="1000+">1,000+ employees</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">How can we help?</label>
+                            <textarea class="form-textarea" placeholder="Tell us about your needs..." rows="5" required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">
+                            <i data-lucide="send"></i>
+                            Send Message
+                        </button>
+
+                        <p style="font-size: var(--text-xs); color: var(--color-text-muted); text-align: center;">
+                            By submitting this form, you agree to our Privacy Policy and Terms of Service.
+                        </p>
+                    </form>
+                </div>
+            </div>
+
+            <div style="margin-top: var(--space-20); text-align: center;">
+                <h2 style="font-size: var(--text-3xl); margin-bottom: var(--space-6);">Prefer to Schedule a Call?</h2>
+                <p style="color: var(--color-text-muted); margin-bottom: var(--space-8); max-width: 600px; margin-left: auto; margin-right: auto;">
+                    Book a personalized demo with our team to see Osprey AI in action and discuss your specific use cases.
+                </p>
+                <a href="#" class="btn btn-primary btn-lg">
+                    <i data-lucide="calendar"></i>
+                    Schedule Demo
+                </a>
             </div>
         </div>
     </main>
 
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <div class="footer-logo">
+                    <svg width="32" height="32" viewBox="0 0 100 100" fill="none">
+                        <circle cx="50" cy="50" r="45" fill="#607ea2"/>
+                        <path d="M50 20 L70 40 L50 60 L30 40 Z" fill="white" opacity="0.9"/>
+                    </svg>
+                    <span>Osprey AI Labs</span>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p class="footer-copyright">&copy; 2025 Osprey AI Labs. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <script src="assets/js/main.js"></script>
     <script>
-        document.getElementById('contactForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            window.OspreyAI.showToast('success', 'Message Sent', 'Thank you! We\'ll get back to you within 24 hours.');
-            setTimeout(() => {
-                window.location.href = 'index.html';
-            }, 2000);
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
         });
     </script>
 </body>
