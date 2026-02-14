@@ -1012,10 +1012,10 @@ body::after {
               opacity   var(--transition-base);
   position: absolute;
 }
-.theme-toggle .icon-sun  { opacity: 1; }
-.theme-toggle .icon-moon { opacity: 0; transform: rotate(90deg) scale(0); }
-[data-theme="dark"] .theme-toggle .icon-sun  { opacity: 0; transform: rotate(-90deg) scale(0); }
-[data-theme="dark"] .theme-toggle .icon-moon { opacity: 1; transform: rotate(0) scale(1); }
+.theme-toggle .sun-icon  { opacity: 1; }
+.theme-toggle .moon-icon { opacity: 0; transform: rotate(90deg) scale(0); }
+[data-theme="dark"] .theme-toggle .sun-icon  { opacity: 0; transform: rotate(-90deg) scale(0); }
+[data-theme="dark"] .theme-toggle .moon-icon { opacity: 1; transform: rotate(0) scale(1); }
 
 /* ── Mobile hamburger ───────────────────────────────────────────────────── */
 
