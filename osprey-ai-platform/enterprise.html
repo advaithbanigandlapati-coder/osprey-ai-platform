@@ -152,47 +152,6 @@
     </footer>
 
     <script src="https://unpkg.com/lucide@0.293.0/dist/umd/lucide.min.js"></script>
-    <script>
-        if (typeof lucide !== 'undefined') {
-            lucide.createIcons();
-        }
-        document.addEventListener('DOMContentLoaded', function() {
-            if (typeof lucide !== 'undefined') {
-                lucide.createIcons();
-            }
-        });
-
-        const themeToggle = document.getElementById('themeToggle');
-        const html = document.documentElement;
-        
-        function updateTheme(theme) {
-            html.setAttribute('data-theme', theme);
-            localStorage.setItem('theme', theme);
-            
-            if (themeToggle) {
-                const sunIcon = themeToggle.querySelector('.sun-icon');
-                const moonIcon = themeToggle.querySelector('.moon-icon');
-                
-                if (theme === 'dark') {
-                    if (sunIcon) sunIcon.style.display = 'none';
-                    if (moonIcon) moonIcon.style.display = 'block';
-                } else {
-                    if (sunIcon) sunIcon.style.display = 'block';
-                    if (moonIcon) moonIcon.style.display = 'none';
-                }
-            }
-        }
-        
-        if (themeToggle) {
-            themeToggle.addEventListener('click', () => {
-                const currentTheme = html.getAttribute('data-theme');
-                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-                updateTheme(newTheme);
-            });
-        }
-
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        updateTheme(savedTheme);
-    </script>
+<script src="assets/js/theme.js"></script>
 </body>
 </html>
