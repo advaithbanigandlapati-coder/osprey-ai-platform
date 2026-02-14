@@ -1661,10 +1661,10 @@ body::after {
 }
 
 .section-title {
-  font-family: var(--font-display);
+  font-family: Optima, 'Optima nova', 'Segoe UI', Candara, sans-serif !important;
   font-size: var(--text-5xl);
-  font-weight: 700;
-  letter-spacing: var(--tracking-tight);
+  font-weight: 500 !important;
+  letter-spacing: -0.02em;
   color: var(--color-text);
   margin-bottom: var(--space-4);
   line-height: var(--leading-tight);
