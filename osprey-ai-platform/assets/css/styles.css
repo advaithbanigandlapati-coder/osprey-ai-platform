@@ -1661,6 +1661,7 @@ body::after {
   text-align: center;
   position: relative;
   z-index: 2;
+  padding: 0 var(--space-8);
 }
 
 .hero-eyebrow {
