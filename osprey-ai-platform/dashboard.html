@@ -1,98 +1,28 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agent Studio - Sign In - Osprey AI Labs</title>
-    <link rel="stylesheet" href="assets/css/styles.css">
-    <link rel="icon" type="image/svg+xml" href="assets/images/osprey-logo.svg">
+    <title>Dashboard - Osprey AI Agentic Studio</title>
+    <link rel="stylesheet" href="dashboard.css">
 </head>
-<body>
-    <nav class="navbar">
-        <div class="navbar-content">
-            <a href="index.html" class="navbar-logo">
-                <svg width="36" height="36" viewBox="0 0 100 100" fill="none">
-                    <circle cx="50" cy="50" r="45" fill="#607ea2"/>
-                    <path d="M50 20 L70 40 L50 60 L30 40 Z" fill="white" opacity="0.9"/>
-                    <path d="M50 40 L65 55 L50 70 L35 55 Z" fill="white" opacity="0.6"/>
-                </svg>
-                <span>Osprey AI Labs</span>
-            </a>
-            <div class="navbar-menu">
-                <div class="navbar-actions">
-                    <a href="index.html" class="btn btn-ghost">Back to Home</a>
+<body class="dashboard-page dark-theme">
+    <div class="dashboard-container">
+        <aside id="sidebar" class="sidebar"></aside>
+        <main id="main-content" class="main-content">
+            <div class="loading-screen">
+                <div class="loading-spinner">
+                    <div class="spinner-ring"></div>
+                    <div class="spinner-ring"></div>
+                    <div class="spinner-ring"></div>
                 </div>
+                <h2>Loading Osprey AI Platform...</h2>
+                <p>Initializing your agent dashboard</p>
             </div>
-        </div>
-    </nav>
-
-    <main style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: var(--space-8);">
-        <div class="glass-card" style="max-width: 480px; width: 100%; padding: var(--space-12);">
-            <div style="text-align: center; margin-bottom: var(--space-10);">
-                <svg width="64" height="64" viewBox="0 0 100 100" fill="none" style="margin: 0 auto var(--space-6);">
-                    <circle cx="50" cy="50" r="45" fill="#607ea2"/>
-                    <path d="M50 20 L70 40 L50 60 L30 40 Z" fill="white" opacity="0.9"/>
-                    <path d="M50 40 L65 55 L50 70 L35 55 Z" fill="white" opacity="0.6"/>
-                </svg>
-                <h1 style="font-size: var(--text-4xl); margin-bottom: var(--space-3);">Agent Studio</h1>
-                <p style="color: var(--color-text-muted);">Sign in to build and deploy AI agents</p>
-            </div>
-
-            <form style="display: flex; flex-direction: column; gap: var(--space-5);">
-                <div class="form-group">
-                    <label class="form-label">Email Address</label>
-                    <input type="email" class="form-input" placeholder="you@company.com" required>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Password</label>
-                    <input type="password" class="form-input" placeholder="••••••••" required>
-                </div>
-
-                <div style="display: flex; align-items: center; justify-content: space-between;">
-                    <label style="display: flex; align-items: center; gap: var(--space-2); cursor: pointer;">
-                        <input type="checkbox" style="width: 16px; height: 16px;">
-                        <span style="font-size: var(--text-sm);">Remember me</span>
-                    </label>
-                    <a href="#" style="font-size: var(--text-sm); color: var(--color-primary);">Forgot password?</a>
-                </div>
-
-                <button type="submit" class="btn btn-primary" style="width: 100%;">
-                    <i data-lucide="log-in"></i>
-                    Sign In
-                </button>
-
-                <div style="text-align: center; padding-top: var(--space-4); border-top: 1px solid var(--color-border);">
-                    <p style="font-size: var(--text-sm); color: var(--color-text-muted); margin-bottom: var(--space-4);">
-                        Or continue with
-                    </p>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3);">
-                        <button type="button" class="btn btn-ghost">
-                            <i data-lucide="github"></i>
-                            GitHub
-                        </button>
-                        <button type="button" class="btn btn-ghost">
-                            <i data-lucide="mail"></i>
-                            Google
-                        </button>
-                    </div>
-                </div>
-
-                <p style="text-align: center; font-size: var(--text-sm); color: var(--color-text-muted); margin-top: var(--space-4);">
-                    Don't have an account? <a href="contact.html" style="color: var(--color-primary); font-weight: 600;">Contact Sales</a>
-                </p>
-            </form>
-        </div>
-    </main>
-
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-    <script src="assets/js/main.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            if (typeof lucide !== 'undefined') {
-                lucide.createIcons();
-            }
-        });
-    </script>
+        </main>
+    </div>
+    <div id="modal-container"></div>
+    <div id="toast-container"></div>
+    <script src="assets/js/dashboard.js"></script>
 </body>
 </html>
