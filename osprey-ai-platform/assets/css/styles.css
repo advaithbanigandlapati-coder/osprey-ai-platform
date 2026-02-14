@@ -1,11 +1,11 @@
 /* ============================================================================
-   OSPREY AI LABS — MASTER STYLESHEET v3.0
+   OSPREY AI LABS — MASTER STYLESHEET v3.1
    Brand-faithful · Glassmorphic · Neumorphic · Apple-grade polish
    2500+ lines
    ============================================================================ */
 
 /* ── GOOGLE FONTS IMPORTS ─────────────────────────────────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=DM+Serif+Display:ital@0;1&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300;1,9..40,400&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&display=swap');
 
@@ -121,8 +121,8 @@
   --shadow-glow-sm: 0 0 12px rgba(96,126,162,0.30);
 
   /* ── TYPOGRAPHY ────────────────────────────────────────────────────────── */
-  --font-display: 'Playfair Display', 'Optima', 'Georgia', serif;
-  --font-heading: 'DM Serif Display', 'Optima', 'Garamond', serif;
+--font-display: 'Optima', 'Segoe UI', 'Candara', 'Noto Sans', sans-serif;
+  --font-heading: 'Optima', 'Segoe UI', 'Candara', 'Noto Sans', sans-serif;
   --font-body:    'DM Sans', 'Optima', -apple-system, sans-serif;
   --font-mono:    'JetBrains Mono', 'Menlo', 'Monaco', monospace;
   --font-serif:   'Cormorant Garamond', 'Garamond', 'Georgia', serif;
@@ -1012,10 +1012,10 @@ body::after {
               opacity   var(--transition-base);
   position: absolute;
 }
-.theme-toggle .sun-icon  { opacity: 1; }
-.theme-toggle .moon-icon { opacity: 0; transform: rotate(90deg) scale(0); }
-[data-theme="dark"] .theme-toggle .sun-icon  { opacity: 0; transform: rotate(-90deg) scale(0); }
-[data-theme="dark"] .theme-toggle .moon-icon { opacity: 1; transform: rotate(0) scale(1); }
+.theme-toggle .sun-icon  { opacity: 1; display: block; }
+.theme-toggle .moon-icon { opacity: 0; transform: rotate(90deg) scale(0); display: none; }
+[data-theme="dark"] .theme-toggle .sun-icon  { opacity: 0; transform: rotate(-90deg) scale(0); display: none; }
+[data-theme="dark"] .theme-toggle .moon-icon { opacity: 1; transform: rotate(0) scale(1); display: block; }
 
 /* ── Mobile hamburger ───────────────────────────────────────────────────── */
 
