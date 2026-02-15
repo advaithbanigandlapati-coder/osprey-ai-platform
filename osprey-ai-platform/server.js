@@ -2,16 +2,24 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const session = require('express-session');
+const cors = require('cors');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
+require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT || 10000; // Render uses PORT env variable
+const PORT = process.env.PORT || 10000;
 
 // Middleware
+app.use(cors({
+    origin: process.env.NODE_ENV === 'production'
+        ? ['https://osprey-ai-platform.onrender.com']
+        : ['http://localhost:10000'],
+    credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(__dirname)); // FIXED: Serve static files from current directory
+app.use(express.static(__dirname));
 
 // Session configuration
 app.use(session({
@@ -20,37 +28,59 @@ app.use(session({
     saveUninitialized: false,
     cookie: {
         httpOnly: true,
-        secure: false, // Set to true in production with HTTPS
+        secure: process.env.NODE_ENV === 'production',
         maxAge: 24 * 60 * 60 * 1000 // 24 hours
     }
 }));
 
-// User database (replace with real DB in production)
-const users = {
-    'admin': {
-        username: 'admin',
-        password: bcrypt.hashSync('admin123', 10),
+// ============================================================================
+// USER DATABASE
+// ============================================================================
+
+const users = [
+    {
+        id: uuidv4(),
+        username: 'Admin@B',
+        password: bcrypt.hashSync('Admin123', 10),
         role: 'admin',
         name: 'Admin User',
-        email: 'admin@ospreyai.com'
+        email: 'admin@ospreyai.com',
+        theme: 'dark',
+        notifications: true,
+        created: new Date('2024-01-01')
     },
-    'demo': {
-        username: 'demo',
-        password: bcrypt.hashSync('demo123', 10),
+    {
+        id: uuidv4(),
+        username: 'User@B',
+        password: bcrypt.hashSync('User123', 10),
         role: 'user',
-        name: 'Demo User',
-        email: 'demo@ospreyai.com'
-    },
-    'investor': {
-        username: 'investor',
-        password: bcrypt.hashSync('investor123', 10),
-        role: 'user',
-        name: 'Investor Access',
-        email: 'investor@ospreyai.com'
+        name: 'Standard User',
+        email: 'user@ospreyai.com',
+        theme: 'dark',
+        notifications: true,
+        created: new Date('2024-01-15')
     }
-};
+];
 
-// AI Agents Registry
+// ============================================================================
+// ACTIVITY LOGS
+// ============================================================================
+
+let activityLogs = [
+    {
+        id: uuidv4(),
+        timestamp: new Date(),
+        user: 'Admin@B',
+        action: 'System Start',
+        details: 'Platform initialized',
+        severity: 'info'
+    }
+];
+
+// ============================================================================
+// AI AGENTS REGISTRY
+// ============================================================================
+
 const aiAgents = [
     {
         id: 'rag-001',
@@ -124,7 +154,10 @@ const aiAgents = [
     }
 ];
 
-// Workflows database
+// ============================================================================
+// WORKFLOWS DATABASE
+// ============================================================================
+
 const workflows = [
     {
         id: 'wf-001',
@@ -155,129 +188,219 @@ const workflows = [
     }
 ];
 
-// Authentication middleware
+// ============================================================================
+// AUTH MIDDLEWARE
+// ============================================================================
+
 const requireAuth = (req, res, next) => {
-    if (!req.session.user) {
-        return res.status(401).json({ 
-            success: false, 
-            message: 'Authentication required' 
-        });
+    if (req.session.userId) {
+        next();
+    } else {
+        res.status(401).json({ error: 'Unauthorized' });
     }
-    next();
 };
 
 const requireAdmin = (req, res, next) => {
-    if (!req.session.user || req.session.user.role !== 'admin') {
-        return res.status(403).json({ 
-            success: false, 
-            message: 'Admin access required' 
-        });
+    if (req.session.userId && req.session.role === 'admin') {
+        next();
+    } else {
+        res.status(403).json({ error: 'Forbidden - Admin access required' });
     }
-    next();
 };
 
-// Routes
-app.post('/api/login', async (req, res) => {
+// ============================================================================
+// AUTH ROUTES  (dashboard.js calls /api/auth/*)
+// ============================================================================
+
+app.post('/api/auth/login', async (req, res) => {
     const { username, password } = req.body;
-    
+
     if (!username || !password) {
-        return res.status(400).json({ 
-            success: false, 
-            message: 'Username and password required' 
-        });
+        return res.status(400).json({ error: 'Username and password required' });
     }
-    
-    const user = users[username.toLowerCase()];
-    
+
+    const user = users.find(u => u.username === username);
+
     if (!user) {
-        return res.status(401).json({ 
-            success: false, 
-            message: 'Invalid credentials' 
-        });
+        return res.status(401).json({ error: 'Invalid credentials' });
     }
-    
+
     const isValidPassword = await bcrypt.compare(password, user.password);
-    
+
     if (!isValidPassword) {
-        return res.status(401).json({ 
-            success: false, 
-            message: 'Invalid credentials' 
-        });
+        return res.status(401).json({ error: 'Invalid credentials' });
     }
-    
-    req.session.user = {
-        username: user.username,
-        role: user.role,
-        name: user.name,
-        email: user.email
-    };
-    
-    res.json({ 
-        success: true, 
-        user: req.session.user
+
+    req.session.userId = user.id;
+    req.session.username = user.username;
+    req.session.role = user.role;
+
+    activityLogs.unshift({
+        id: uuidv4(),
+        timestamp: new Date(),
+        user: user.username,
+        action: 'User Login',
+        details: `${user.username} logged in`,
+        severity: 'info'
+    });
+
+    res.json({
+        success: true,
+        user: {
+            id: user.id,
+            username: user.username,
+            role: user.role,
+            email: user.email,
+            name: user.name,
+            theme: user.theme
+        }
     });
 });
 
-app.post('/api/logout', (req, res) => {
+app.post('/api/auth/logout', (req, res) => {
+    const username = req.session.username;
     req.session.destroy((err) => {
         if (err) {
-            return res.status(500).json({ 
-                success: false, 
-                message: 'Logout failed' 
-            });
+            return res.status(500).json({ error: 'Logout failed' });
         }
-        res.json({ success: true, message: 'Logged out successfully' });
+        activityLogs.unshift({
+            id: uuidv4(),
+            timestamp: new Date(),
+            user: username,
+            action: 'User Logout',
+            details: `${username} logged out`,
+            severity: 'info'
+        });
+        res.json({ success: true });
     });
 });
 
-app.get('/api/session', (req, res) => {
-    if (req.session.user) {
-        res.json({ 
-            success: true, 
-            user: req.session.user 
-        });
-    } else {
-        res.status(401).json({ 
-            success: false, 
-            message: 'Not authenticated' 
-        });
+app.get('/api/auth/session', (req, res) => {
+    if (!req.session.userId) {
+        return res.json({ authenticated: false });
     }
+    const user = users.find(u => u.id === req.session.userId);
+    if (!user) {
+        return res.json({ authenticated: false });
+    }
+    res.json({
+        authenticated: true,
+        user: {
+            id: user.id,
+            username: user.username,
+            role: user.role,
+            email: user.email,
+            name: user.name,
+            theme: user.theme
+        }
+    });
 });
 
-// AI Agents endpoints
+// ============================================================================
+// AGENT ROUTES
+// ============================================================================
+
 app.get('/api/agents', requireAuth, (req, res) => {
-    res.json({ 
-        success: true, 
-        agents: aiAgents 
-    });
+    res.json({ success: true, agents: aiAgents });
 });
 
 app.get('/api/agents/:id', requireAuth, (req, res) => {
     const agent = aiAgents.find(a => a.id === req.params.id);
     if (!agent) {
-        return res.status(404).json({ 
-            success: false, 
-            message: 'Agent not found' 
-        });
+        return res.status(404).json({ success: false, message: 'Agent not found' });
     }
-    res.json({ 
-        success: true, 
-        agent 
+    res.json({ success: true, agent });
+});
+
+// ============================================================================
+// ANALYTICS ROUTE  (dashboard.js calls /api/analytics/dashboard)
+// ============================================================================
+
+app.get('/api/analytics/dashboard', requireAuth, (req, res) => {
+    const totalRequests = aiAgents.reduce((sum, a) => sum + a.metrics.requests, 0);
+    const avgPerformance = aiAgents.reduce((sum, a) => sum + a.metrics.successRate, 0) / aiAgents.length;
+
+    res.json({
+        totalAgents: aiAgents.length,
+        activeAgents: aiAgents.filter(a => a.status === 'active').length,
+        totalRequests,
+        avgPerformance: avgPerformance.toFixed(1),
+        uptime: 99.9,
+        recentActivity: activityLogs.slice(0, 10)
     });
 });
 
-// Workflows endpoints
+// ============================================================================
+// ACTIVITY LOGS ROUTE  (dashboard.js calls /api/logs)
+// ============================================================================
+
+app.get('/api/logs', requireAuth, (req, res) => {
+    const limit = parseInt(req.query.limit) || 50;
+    res.json({ logs: activityLogs.slice(0, limit) });
+});
+
+// ============================================================================
+// USER PROFILE ROUTES  (dashboard.js calls /api/user/profile)
+// ============================================================================
+
+app.get('/api/user/profile', requireAuth, (req, res) => {
+    const user = users.find(u => u.id === req.session.userId);
+    res.json({
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+        theme: user.theme,
+        notifications: user.notifications,
+        created: user.created
+    });
+});
+
+app.put('/api/user/profile', requireAuth, async (req, res) => {
+    const idx = users.findIndex(u => u.id === req.session.userId);
+    const { name, email, theme, notifications, currentPassword, newPassword } = req.body;
+
+    if (newPassword && currentPassword) {
+        const valid = await bcrypt.compare(currentPassword, users[idx].password);
+        if (!valid) {
+            return res.status(401).json({ error: 'Current password is incorrect' });
+        }
+        users[idx].password = await bcrypt.hash(newPassword, 10);
+    }
+
+    if (name) users[idx].name = name;
+    if (email) users[idx].email = email;
+    if (theme) users[idx].theme = theme;
+    if (notifications !== undefined) users[idx].notifications = notifications;
+
+    activityLogs.unshift({
+        id: uuidv4(),
+        timestamp: new Date(),
+        user: req.session.username,
+        action: 'Profile Updated',
+        details: 'User updated their profile settings',
+        severity: 'info'
+    });
+
+    res.json({ success: true });
+});
+
+// ============================================================================
+// WORKFLOWS ROUTE
+// ============================================================================
+
 app.get('/api/workflows', requireAuth, (req, res) => {
-    res.json({ 
-        success: true, 
-        workflows 
-    });
+    res.json({ success: true, workflows });
 });
 
-// Chat endpoint with enhanced responses
+// ============================================================================
+// CHAT ROUTE
+// ============================================================================
+
 app.post('/api/chat', requireAuth, (req, res) => {
     const { message, agentId } = req.body;
-    
+
     const responses = {
         'hello': 'Hello! I\'m your Osprey AI assistant. How can I help you optimize your workflows today?',
         'hi': 'Hi there! Ready to streamline your operations with AI?',
@@ -288,40 +411,41 @@ app.post('/api/chat', requireAuth, (req, res) => {
         'workflows': `You have ${workflows.length} workflows configured:\n• ${workflows.filter(w => w.status === 'active').length} active\n• ${workflows.filter(w => w.status === 'running').length} currently running\n• Average success rate: ${(workflows.reduce((acc, w) => acc + w.successRate, 0) / workflows.length).toFixed(1)}%`,
         'default': 'I understand you\'re asking about that. As your AI assistant, I\'m here to help you optimize your operations with Osprey AI Labs. Could you be more specific about what you need?'
     };
-    
+
     const lowerMessage = message.toLowerCase();
     let response = responses.default;
-    
-    // Simple keyword matching
+
     for (const [key, value] of Object.entries(responses)) {
         if (lowerMessage.includes(key)) {
             response = value;
             break;
         }
     }
-    
-    // Add agent-specific responses
+
     if (agentId) {
         const agent = aiAgents.find(a => a.id === agentId);
         if (agent) {
             response = `[${agent.name}] ${response}`;
         }
     }
-    
-    res.json({ 
-        success: true, 
+
+    res.json({
+        success: true,
         message: response,
         timestamp: new Date().toISOString(),
         agentId: agentId || 'general'
     });
 });
 
-// Dashboard metrics
+// ============================================================================
+// METRICS ROUTE
+// ============================================================================
+
 app.get('/api/metrics/overview', requireAuth, (req, res) => {
     const totalRequests = aiAgents.reduce((sum, agent) => sum + agent.metrics.requests, 0);
     const avgSuccessRate = aiAgents.reduce((sum, agent) => sum + agent.metrics.successRate, 0) / aiAgents.length;
     const avgResponseTime = aiAgents.reduce((sum, agent) => sum + agent.metrics.avgResponseTime, 0) / aiAgents.length;
-    
+
     res.json({
         success: true,
         metrics: {
@@ -339,7 +463,10 @@ app.get('/api/metrics/overview', requireAuth, (req, res) => {
     });
 });
 
-// Activity feed
+// ============================================================================
+// ACTIVITY FEED ROUTE
+// ============================================================================
+
 app.get('/api/activity/recent', requireAuth, (req, res) => {
     const activities = [
         {
@@ -367,28 +494,39 @@ app.get('/api/activity/recent', requireAuth, (req, res) => {
             timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000)
         }
     ];
-    
-    res.json({
-        success: true,
-        activities
-    });
+
+    res.json({ success: true, activities });
 });
 
-// Serve index.html for root
+// ============================================================================
+// PAGE ROUTES
+// ============================================================================
+
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html')); // FIXED: Serve from current directory
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Error handling
+app.get('/signin', (req, res) => {
+    res.sendFile(path.join(__dirname, 'signin.html'));
+});
+
+app.get('/dashboard', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dashboard.html'));
+});
+
+// ============================================================================
+// ERROR HANDLING
+// ============================================================================
+
 app.use((err, req, res, next) => {
     console.error(err.stack);
-    res.status(500).json({
-        success: false,
-        message: 'Internal server error'
-    });
+    res.status(500).json({ success: false, message: 'Internal server error' });
 });
 
-// Start server
+// ============================================================================
+// START SERVER
+// ============================================================================
+
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`
 ╔═══════════════════════════════════════════════════════╗
@@ -397,16 +535,13 @@ app.listen(PORT, '0.0.0.0', () => {
 ║                                                       ║
 ╠═══════════════════════════════════════════════════════╣
 ║                                                       ║
-║   Environment: ${process.env.NODE_ENV || 'development'}                           ║
-║   Port: ${PORT}                                        ║
+║   Environment: ${(process.env.NODE_ENV || 'development').padEnd(38)}║
+║   Port: ${String(PORT).padEnd(45)}║
 ║                                                       ║
-║   Demo Credentials:                                   ║
+║   Dashboard Credentials:                              ║
 ║   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━   ║
-║   Admin:    admin / admin123                          ║
-║   Demo:     demo / demo123                            ║
-║   Investor: investor / investor123                    ║
-║                                                       ║
-║   Ready for investor demo! ✨                         ║
+║   Admin:  Admin@B  / Admin123                         ║
+║   User:   User@B   / User123                          ║
 ║                                                       ║
 ╚═══════════════════════════════════════════════════════╝
     `);
