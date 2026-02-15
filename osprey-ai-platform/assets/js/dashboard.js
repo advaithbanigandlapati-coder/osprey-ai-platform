@@ -34,7 +34,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         showToast('Welcome to Osprey AI Platform', 'success');
     } catch (error) {
         console.error('Initialization error:', error);
-        window.location.href = '/signin';
+        showToast('Demo mode: Some features may be limited', 'warning');
+        // Don't redirect in demo mode, just continue with limited functionality
+        await initializeDashboard().catch(e => console.error('Dashboard init error:', e));
+        setupEventListeners();
     }
 });
 
@@ -44,20 +47,17 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 async function checkAuthentication() {
     try {
-        const response = await fetch('/api/auth/session', {
-            credentials: 'include'
-        });
+        // Mock authentication for demo mode
+        console.log('🔓 Running in demo mode with mock authentication');
         
-        const data = await response.json();
-        
-        if (!data.authenticated) {
-            window.location.href = '/signin';
-            return;
-        }
-        
-        AppState.currentUser = data.user;
-        AppState.theme = data.user.theme || 'dark';
-        AppState.isAdmin = data.user.role === 'admin';
+        AppState.currentUser = {
+            username: 'Admin@B',
+            email: 'admin@demo.com',
+            role: 'admin',
+            theme: 'dark'
+        };
+        AppState.theme = 'dark';
+        AppState.isAdmin = true;
         
         document.body.classList.toggle('dark-theme', AppState.theme === 'dark');
         document.body.classList.toggle('light-theme', AppState.theme === 'light');
@@ -129,12 +129,59 @@ async function initializeDashboard() {
 
 async function loadAgents() {
     try {
-        const response = await fetch('/api/agents', {
-            credentials: 'include'
-        });
-        
-        const data = await response.json();
-        AppState.agents = data.agents;
+        // Mock agents data for demo
+        AppState.agents = [
+            {
+                id: 'agent-001',
+                name: 'Customer Support Bot',
+                type: 'Support Agent',
+                status: 'active',
+                requests: 12543,
+                successRate: 98.5,
+                lastActive: new Date().toISOString(),
+                description: 'Handles customer inquiries and support tickets'
+            },
+            {
+                id: 'agent-002',
+                name: 'Sales Assistant',
+                type: 'Sales Agent',
+                status: 'active',
+                requests: 8432,
+                successRate: 96.2,
+                lastActive: new Date(Date.now() - 3600000).toISOString(),
+                description: 'Assists with sales inquiries and lead qualification'
+            },
+            {
+                id: 'agent-003',
+                name: 'Data Analyzer',
+                type: 'Analytics Agent',
+                status: 'active',
+                requests: 5621,
+                successRate: 99.1,
+                lastActive: new Date(Date.now() - 7200000).toISOString(),
+                description: 'Analyzes business data and generates insights'
+            },
+            {
+                id: 'agent-004',
+                name: 'Email Processor',
+                type: 'Automation Agent',
+                status: 'paused',
+                requests: 3245,
+                successRate: 94.8,
+                lastActive: new Date(Date.now() - 86400000).toISOString(),
+                description: 'Processes and categorizes incoming emails'
+            },
+            {
+                id: 'agent-005',
+                name: 'Content Generator',
+                type: 'Creative Agent',
+                status: 'active',
+                requests: 1876,
+                successRate: 97.3,
+                lastActive: new Date(Date.now() - 1800000).toISOString(),
+                description: 'Generates marketing content and copy'
+            }
+        ];
         
         console.log(`✅ Loaded ${AppState.agents.length} agents`);
     } catch (error) {
@@ -145,12 +192,25 @@ async function loadAgents() {
 
 async function loadAnalytics() {
     try {
-        const response = await fetch('/api/analytics/dashboard', {
-            credentials: 'include'
-        });
-        
-        const data = await response.json();
-        AppState.analytics = data;
+        // Mock analytics data for demo
+        AppState.analytics = {
+            totalRequests: 31717,
+            activeAgents: 5,
+            avgResponseTime: 1.2,
+            successRate: 97.8,
+            todayRequests: 2847,
+            weeklyGrowth: 12.5,
+            monthlyRevenue: 48923,
+            uptime: 99.9,
+            requestsChart: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                data: [4200, 4500, 4800, 4300, 5100, 4900, 5200]
+            },
+            agentPerformance: {
+                labels: ['Customer Support', 'Sales', 'Analytics', 'Email', 'Content'],
+                data: [98.5, 96.2, 99.1, 94.8, 97.3]
+            }
+        };
         
         console.log('✅ Analytics loaded');
     } catch (error) {
@@ -160,12 +220,31 @@ async function loadAnalytics() {
 
 async function loadActivityLogs() {
     try {
-        const response = await fetch('/api/logs?limit=100', {
-            credentials: 'include'
-        });
+        // Mock activity logs for demo
+        const actions = [
+            'Agent started processing request',
+            'Agent completed task successfully',
+            'New agent deployed',
+            'Configuration updated',
+            'API call executed',
+            'User logged in',
+            'Report generated',
+            'Integration synchronized'
+        ];
         
-        const data = await response.json();
-        AppState.logs = data.logs;
+        AppState.logs = [];
+        for (let i = 0; i < 100; i++) {
+            AppState.logs.push({
+                id: `log-${i}`,
+                timestamp: new Date(Date.now() - Math.random() * 86400000 * 7).toISOString(),
+                agent: AppState.agents[Math.floor(Math.random() * 5)]?.name || 'System',
+                action: actions[Math.floor(Math.random() * actions.length)],
+                status: Math.random() > 0.1 ? 'success' : 'warning',
+                duration: (Math.random() * 5).toFixed(2) + 's'
+            });
+        }
+        
+        AppState.logs.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
         
         console.log(`✅ Loaded ${AppState.logs.length} activity logs`);
     } catch (error) {
