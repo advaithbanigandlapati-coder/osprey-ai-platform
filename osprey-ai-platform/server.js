@@ -6,6 +6,8 @@ const cors    = require('cors');
 const path    = require('path');
 const { v4: uuidv4 } = require('uuid');
 require('dotenv').config();
+const aiRouter = require('./api/ai-router');
+const ollamaHandler = require('./api/ollama-handler');
 
 const app  = express();
 const PORT = process.env.PORT || 10000;
@@ -472,11 +474,79 @@ app.use((err, req, res, next) => {
     res.status(500).json({ success: false, message: 'Internal server error' });
 });
 
+// ═══════════════════════════════════════════════════════════════════
+// AI ENDPOINTS
+// ═══════════════════════════════════════════════════════════════════
+app.get('/api/ai/health', async (req, res) => {
+    try {
+        const isHealthy = await ollamaHandler.checkHealth();
+        const models = await ollamaHandler.getModels();
+        res.json({
+            status: isHealthy ? 'healthy' : 'unavailable',
+            models: models.map(m => m.name),
+            timestamp: new Date().toISOString()
+        });
+    } catch (error) {
+        res.status(500).json({ status: 'error', message: error.message });
+    }
+});
+
+app.post('/api/ai/generate', async (req, res) => {
+    try {
+        const { message, agent, history } = req.body;
+        if (!message || typeof message !== 'string') {
+            return res.status(400).json({ error: 'Message is required' });
+        }
+        const result = await aiRouter.generateResponse(
+            agent || 'content-writer',
+            message,
+            history || []
+        );
+        activityLogs.push({
+            id: uuidv4(),
+            timestamp: new Date(),
+            user: req.session?.user?.username || 'Anonymous',
+            action: 'AI Generation',
+            details: `Agent: ${result.agent?.name || agent}`,
+            severity: 'info'
+        });
+        res.json(result);
+    } catch (error) {
+        console.error('AI generation error:', error);
+        res.status(500).json({ error: 'AI generation failed', message: error.message });
+    }
+});
+
+app.get('/api/ai/agents', (req, res) => {
+    try {
+        const agents = aiRouter.getAgents();
+        res.json({ agents });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.get('/api/ai/agents/:agentId/greeting', (req, res) => {
+    try {
+        const { agentId } = req.params;
+        if (!aiRouter.isValidAgent(agentId)) {
+            return res.status(404).json({ error: 'Agent not found' });
+        }
+        const greeting = aiRouter.getGreeting(agentId);
+        res.json({ greeting, agentId });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+
+
 // ─────────────────────────────────────────────────────────────────────────────
 // START
 // ─────────────────────────────────────────────────────────────────────────────
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`
+    
 ╔══════════════════════════════════════════════════════╗
 ║                                                      ║
 ║   🦅  Osprey AI Labs Platform — Running             ║
@@ -491,5 +561,17 @@ app.listen(PORT, '0.0.0.0', () => {
 ║   User@B   / User123   (user access)                 ║
 ║                                                      ║
 ╚══════════════════════════════════════════════════════╝
-    `);
+    `);  // ← Close the template string HERE
+    
+    // Now setTimeout is properly outside console.log
+    setTimeout(async () => {
+        console.log('\n🤖 Checking Ollama AI...');
+        const isHealthy = await ollamaHandler.checkHealth();
+        if (isHealthy) {
+            console.log('✅ Ollama is ready!');
+        } else {
+            console.log('⚠️  Ollama not available - using fallback');
+        }
+    }, 2000);
 });
+
