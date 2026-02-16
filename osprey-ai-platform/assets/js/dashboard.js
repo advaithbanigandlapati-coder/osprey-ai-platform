@@ -1,822 +1,423 @@
+/* ============================================================================
+   OSPREY AI PLATFORM - DASHBOARD JAVASCRIPT
+   Following user's file structure with Ollama integration
+   ============================================================================ */
 
-// ===============================================
-// AGENT CONFIGURATION
-// ===============================================
+// ============================================================================
+// STATE MANAGEMENT
+// ============================================================================
 
-const AGENTS = {
-    'content-writer': {
-        name: 'Content Writer Pro',
-        icon: '✍️',
-        color: '#578098',
-        description: 'Create engaging content, from blog posts to marketing copy'
+const AppState = {
+    currentPage: 'home',
+    currentTheme: localStorage.getItem('theme') || 'light',
+    user: {
+        name: 'advaith',
+        initials: 'A',
+        organization: "advaith's organization",
+        plan: 'Community Plan'
     },
-    'code-assistant': {
-        name: 'Code Assistant',
-        icon: '💻',
-        color: '#6a93aa',
-        description: 'Write, debug, and optimize code in any language'
-    },
-    'data-analyst': {
-        name: 'Data Analyst',
-        icon: '📊',
-        color: '#7ba3b8',
-        description: 'Analyze data, identify trends, and generate insights'
-    },
-    'support-bot': {
-        name: 'Support Bot',
-        icon: '💬',
-        color: '#8cb3c6',
-        description: 'Friendly customer support and problem-solving'
-    },
-    'research-assistant': {
-        name: 'Research Assistant',
-        icon: '🔍',
-        color: '#9dc3d4',
-        description: 'Research topics, synthesize information, create reports'
-    },
-    'marketing-strategist': {
-        name: 'Marketing Strategist',
-        icon: '📈',
-        color: '#aed3e2',
-        description: 'Develop campaigns, identify audiences, create strategies'
-    }
+    dropdownOpen: false,
+    orgsViewOpen: false
 };
 
-// ===============================================
-// STATE MANAGEMENT
-// ===============================================
-
-let currentAgent = 'content-writer';
-let isAIReady = false;
-let messageHistory = {};
-let currentUser = null;
-
-// Initialize message history
-Object.keys(AGENTS).forEach(agentId => {
-    messageHistory[agentId] = [];
-});
-
-// ===============================================
-// PAGE INITIALIZATION
-// ===============================================
+// ============================================================================
+// INITIALIZATION
+// ============================================================================
 
 document.addEventListener('DOMContentLoaded', async () => {
-    console.log('🦅 Dashboard initializing...');
+    console.log('🦅 Initializing Osprey AI Platform...');
     
-    try {
-        // Check authentication
-        await checkAuth();
-        
-        // Initialize UI
-        initializeDashboard();
-        
-        // Initialize AI (but don't show welcome yet)
-        await initializeAI();
-        
-        // Now show welcome message (after UI is ready)
-        setTimeout(() => {
-            showWelcomeMessage();
-        }, 500);
-        
-    } catch (error) {
-        console.error('Dashboard initialization error:', error);
+    // Initialize theme
+    applyTheme(AppState.currentTheme);
+    
+    // Initialize navigation
+    setupNavigation();
+    
+    // Initialize user dropdown
+    setupUserDropdown();
+    
+    // Initialize sidebar toggle
+    setupSidebarToggle();
+    
+    // Initialize AI
+    await initializeAI();
+    
+    // Initialize Lucide icons
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
     }
+    
+    console.log('✅ Dashboard ready!');
 });
 
-//===============================================
-// AUTHENTICATION
-// ===============================================
+// ============================================================================
+// NAVIGATION
+// ============================================================================
 
-async function checkAuth() {
-    try {
-        const response = await fetch('/api/auth/session', {
-            credentials: 'include'
+function setupNavigation() {
+    // Nav item clicks
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+            e.preventDefault();
+            const page = item.getAttribute('data-page');
+            navigateToPage(page);
         });
-        const data = await response.json();
-        
-        if (!data.authenticated) {
-            window.location.href = '/signin.html';
-            return;
-        }
-        
-        currentUser = data.user;
-        console.log('✅ User authenticated:', currentUser.username);
-        
-    } catch (error) {
-        console.error('Auth check failed:', error);
-        window.location.href = '/signin.html';
+    });
+    
+    // Handle browser back/forward
+    window.addEventListener('hashchange', () => {
+        const page = location.hash.slice(1) || 'home';
+        navigateToPage(page, false);
+    });
+    
+    // Load initial page from hash
+    const initialPage = location.hash.slice(1) || 'home';
+    navigateToPage(initialPage, false);
+}
+
+function navigateToPage(pageName, updateHash = true) {
+    // Update hash
+    if (updateHash) {
+        location.hash = pageName;
+    }
+    
+    // Update nav active state
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.toggle('active', item.getAttribute('data-page') === pageName);
+    });
+    
+    // Update page content
+    document.querySelectorAll('.content-page').forEach(page => {
+        page.classList.toggle('active', page.getAttribute('data-page') === pageName);
+    });
+    
+    // Update page title
+    updatePageTitle(pageName);
+    
+    // Update state
+    AppState.currentPage = pageName;
+    
+    // If it's an AI agent page, initialize chat
+    const isAgent = document.querySelector(`[data-page="${pageName}"]`)?.hasAttribute('data-agent');
+    if (isAgent) {
+        initializeAgentChat(pageName);
     }
 }
 
-// ===============================================
-// DASHBOARD INITIALIZATION
-// ===============================================
-
-function initializeDashboard() {
-    renderSidebar();
-    renderMainContent();
-    attachEventListeners();
-}
-
-function renderSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    if (!sidebar) return;
+function updatePageTitle(pageName) {
+    const titles = {
+        'home': 'Welcome back, advaith',
+        'agents': 'AI Agents',
+        'analytics': 'Analytics',
+        'workflows': 'Workflows',
+        'content-writer': 'Content Writer Pro',
+        'code-assistant': 'Code Assistant',
+        'data-analyst': 'Data Analyst AI',
+        'support-bot': 'Support Bot',
+        'research': 'Research Assistant',
+        'marketing': 'Marketing Strategist'
+    };
     
-    sidebar.innerHTML = `
-        <div class="sidebar-header">
-            <div class="logo">
-                <span class="logo-icon">🦅</span>
-                <span class="logo-text">Osprey AI</span>
-            </div>
-        </div>
-        
-        <nav class="sidebar-nav">
-            <a href="#" class="nav-item active" data-page="agents">
-                <span>🤖</span> AI Agents
-            </a>
-            <a href="#" class="nav-item" data-page="settings">
-                <span>⚙️</span> User Settings
-            </a>
-            ${currentUser && currentUser.role === 'admin' ? `
-            <a href="#" class="nav-item" data-page="admin">
-                <span>👥</span> Admin Panel
-            </a>
-            ` : ''}
-        </nav>
-        
-        <div class="sidebar-footer">
-            <div class="user-info">
-                <div class="user-avatar">${currentUser?.name?.charAt(0) || 'U'}</div>
-                <div class="user-details">
-                    <div class="user-name">${currentUser?.name || 'User'}</div>
-                    <div class="user-role">${currentUser?.role || 'user'}</div>
-                </div>
-            </div>
-            <button class="btn-logout" onclick="logout()">
-                <span>🚪</span> Logout
-            </button>
-        </div>
-    `;
-}
-
-function renderMainContent() {
-    const mainContent = document.getElementById('main-content');
-    if (!mainContent) return;
-    
-    mainContent.innerHTML = `
-        <div class="page-content">
-            <div id="page-agents" class="page active">
-                ${renderAgentsPage()}
-            </div>
-            <div id="page-settings" class="page">
-                ${renderSettingsPage()}
-            </div>
-            ${currentUser && currentUser.role === 'admin' ? `
-            <div id="page-admin" class="page">
-                ${renderAdminPage()}
-            </div>
-            ` : ''}
-        </div>
-    `;
-}
-
-// ===============================================
-// AGENTS PAGE
-// ===============================================
-
-function renderAgentsPage() {
-    return `
-        <div class="page-header">
-            <h1>AI Agents</h1>
-            <p>Chat with specialized AI assistants</p>
-        </div>
-        
-        <div class="agent-tabs">
-            ${Object.entries(AGENTS).map(([id, agent]) => `
-                <button class="agent-tab ${id === currentAgent ? 'active' : ''}" 
-                        data-agent="${id}"
-                        onclick="switchAgent('${id}')">
-                    <span class="agent-icon">${agent.icon}</span>
-                    <span class="agent-name">${agent.name}</span>
-                </button>
-            `).join('')}
-        </div>
-        
-        <div class="chat-container">
-            <div class="chat-messages" id="chat-messages"></div>
-            <div class="chat-input-container">
-                <input type="text" 
-                       class="chat-input" 
-                       id="chat-input" 
-                       placeholder="Type your message..."
-                       onkeypress="if(event.key==='Enter') sendMessage()">
-                <button class="btn-send" onclick="sendMessage()">Send</button>
-            </div>
-        </div>
-    `;
-}
-
-// ===============================================
-// SETTINGS PAGE
-// ===============================================
-
-function renderSettingsPage() {
-    return `
-        <div class="page-header">
-            <h1>User Settings</h1>
-            <p>Manage your profile and preferences</p>
-        </div>
-        
-        <div class="settings-container">
-            <div class="settings-card">
-                <h3>Profile Information</h3>
-                <form id="profile-form" onsubmit="updateProfile(event)">
-                    <div class="form-group">
-                        <label>Name</label>
-                        <input type="text" id="profile-name" value="${currentUser?.name || ''}" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Email</label>
-                        <input type="email" id="profile-email" value="${currentUser?.email || ''}" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Username</label>
-                        <input type="text" value="${currentUser?.username || ''}" disabled>
-                        <small>Username cannot be changed</small>
-                    </div>
-                    <button type="submit" class="btn-primary">Save Changes</button>
-                </form>
-            </div>
-            
-            <div class="settings-card">
-                <h3>Change Password</h3>
-                <form id="password-form" onsubmit="changePassword(event)">
-                    <div class="form-group">
-                        <label>Current Password</label>
-                        <input type="password" id="current-password" required>
-                    </div>
-                    <div class="form-group">
-                        <label>New Password</label>
-                        <input type="password" id="new-password" required minlength="6">
-                    </div>
-                    <div class="form-group">
-                        <label>Confirm New Password</label>
-                        <input type="password" id="confirm-password" required minlength="6">
-                    </div>
-                    <button type="submit" class="btn-primary">Update Password</button>
-                </form>
-            </div>
-            
-            <div class="settings-card">
-                <h3>Preferences</h3>
-                <div class="form-group">
-                    <label>Theme</label>
-                    <select id="theme-select" onchange="changeTheme(this.value)">
-                        <option value="light" ${currentUser?.theme === 'light' ? 'selected' : ''}>Light</option>
-                        <option value="dark" ${currentUser?.theme === 'dark' ? 'selected' : ''}>Dark</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>
-                        <input type="checkbox" 
-                               id="notifications-toggle" 
-                               ${currentUser?.notifications ? 'checked' : ''}
-                               onchange="toggleNotifications(this.checked)">
-                        Enable Notifications
-                    </label>
-                </div>
-            </div>
-        </div>
-    `;
-}
-
-// ===============================================
-// ADMIN PAGE
-// ===============================================
-
-function renderAdminPage() {
-    return `
-        <div class="page-header">
-            <h1>Admin Panel</h1>
-            <p>Manage users and system settings</p>
-            <button class="btn-primary" onclick="showCreateUserModal()">
-                + Create New User
-            </button>
-        </div>
-        
-        <div class="admin-container">
-            <div class="users-table-container">
-                <table class="users-table" id="users-table">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Username</th>
-                            <th>Email</th>
-                            <th>Role</th>
-                            <th>Created</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="users-table-body">
-                        <tr><td colspan="6">Loading...</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    `;
-}
-
-// ===============================================
-// AI INITIALIZATION
-// ===============================================
-
-async function initializeAI() {
-    console.log('🦅 Initializing Osprey AI...');
-    
-    const overlay = document.getElementById('ai-loading-overlay');
-    const progressFill = document.getElementById('ai-progress-fill');
-    const statusText = document.getElementById('ai-loading-status');
-
-    if (overlay) overlay.style.display = 'flex';
-
-    try {
-        await window.initializeOspreyAI((progress) => {
-            if (progressFill) {
-                progressFill.style.width = progress.progress + '%';
-            }
-            if (statusText) {
-                const messages = {
-                    'downloading': 'Loading AI agents...',
-                    'loading': 'Initializing...',
-                    'ready': 'All 6 agents ready!'
-                };
-                statusText.textContent = messages[progress.status] || progress.status;
-            }
-        });
-
-        isAIReady = true;
-
-        if (overlay) {
-            setTimeout(() => {
-                overlay.style.opacity = '0';
-                setTimeout(() => {
-                    overlay.style.display = 'none';
-                    overlay.style.opacity = '1';
-                }, 500);
-            }, 1000);
-        }
-
-        console.log('✅ Osprey AI ready!');
-        // Welcome message will be shown by DOMContentLoaded after delay
-
-    } catch (error) {
-        console.error('❌ AI initialization failed:', error);
-        if (statusText) {
-            statusText.textContent = '❌ Failed to load AI. Please refresh.';
-        }
+    const titleEl = document.getElementById('pageTitle');
+    if (titleEl) {
+        titleEl.textContent = titles[pageName] || 'Osprey AI';
     }
 }
 
-// ===============================================
-// AGENT FUNCTIONS
-// ===============================================
+// ============================================================================
+// USER DROPDOWN (Google-style)
+// ============================================================================
 
-function switchAgent(agentId) {
-    if (!AGENTS[agentId]) return;
+function setupUserDropdown() {
+    const avatarBtn = document.getElementById('userAvatarBtn');
+    const dropdown = document.getElementById('userDropdown');
+    const orgSelector = dropdown.querySelector('.org-selector');
+    const orgsSection = document.getElementById('orgsSection');
+    const mainMenu = dropdown.querySelector('.main-menu');
+    const backBtn = document.getElementById('backToMain');
     
-    currentAgent = agentId;
-    window.setActiveAgent(agentId);
-    
-    // Update tabs
-    document.querySelectorAll('.agent-tab').forEach(tab => {
-        tab.classList.remove('active');
-        if (tab.dataset.agent === agentId) {
-            tab.classList.add('active');
+    // Toggle dropdown
+    avatarBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        AppState.dropdownOpen = !AppState.dropdownOpen;
+        dropdown.classList.toggle('show', AppState.dropdownOpen);
+        
+        // Refresh icons when opening
+        if (AppState.dropdownOpen && typeof lucide !== 'undefined') {
+            setTimeout(() => lucide.createIcons(), 50);
         }
     });
     
-    // Load history
-    loadAgentHistory(agentId);
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!dropdown.contains(e.target) && !avatarBtn.contains(e.target)) {
+            AppState.dropdownOpen = false;
+            dropdown.classList.remove('show');
+        }
+    });
+    
+    // Organization selector - show orgs view
+    orgSelector.addEventListener('click', () => {
+        orgsSection.style.display = 'block';
+        mainMenu.style.display = 'none';
+        AppState.orgsViewOpen = true;
+        
+        if (typeof lucide !== 'undefined') {
+            setTimeout(() => lucide.createIcons(), 50);
+        }
+    });
+    
+    // Back to main menu
+    backBtn.addEventListener('click', () => {
+        orgsSection.style.display = 'none';
+        mainMenu.style.display = 'block';
+        AppState.orgsViewOpen = false;
+        
+        if (typeof lucide !== 'undefined') {
+            setTimeout(() => lucide.createIcons(), 50);
+        }
+    });
+    
+    // Theme toggle
+    const themeToggle = document.getElementById('themeToggleDropdown');
+    themeToggle.addEventListener('click', () => {
+        toggleTheme();
+    });
+    
+    // Logout
+    dropdown.querySelector('.logout-item').addEventListener('click', () => {
+        handleLogout();
+    });
 }
 
-function loadAgentHistory(agentId) {
-    const chatContainer = document.getElementById('chat-messages');
-    if (!chatContainer) return;
+// ============================================================================
+// THEME MANAGEMENT
+// ============================================================================
 
-    chatContainer.innerHTML = '';
+function toggleTheme() {
+    AppState.currentTheme = AppState.currentTheme === 'light' ? 'dark' : 'light';
+    applyTheme(AppState.currentTheme);
+    localStorage.setItem('theme', AppState.currentTheme);
+}
 
-    if (messageHistory[agentId] && messageHistory[agentId].length > 0) {
-        messageHistory[agentId].forEach(msg => {
-            addMessageToChat(msg.type, msg.content, agentId, false);
-        });
+function applyTheme(theme) {
+    document.body.setAttribute('data-theme', theme);
+    
+    // Update theme toggle icons
+    const sunIcons = document.querySelectorAll('[data-lucide="sun"]');
+    const moonIcons = document.querySelectorAll('[data-lucide="moon"]');
+    
+    if (theme === 'dark') {
+        sunIcons.forEach(icon => icon.style.opacity = '0.5');
+        moonIcons.forEach(icon => icon.style.opacity = '1');
     } else {
-        const greeting = window.getAgentGreeting(agentId);
-        addMessageToChat('ai', greeting, agentId, false);
+        sunIcons.forEach(icon => icon.style.opacity = '1');
+        moonIcons.forEach(icon => icon.style.opacity = '0.5');
     }
 }
 
-async function sendMessage() {
-    const input = document.getElementById('chat-input');
-    if (!input) return;
+// ============================================================================
+// SIDEBAR
+// ============================================================================
+
+function setupSidebarToggle() {
+    const toggleBtn = document.getElementById('sidebarToggle');
+    const sidebar = document.getElementById('sidebar');
+    
+    toggleBtn.addEventListener('click', () => {
+        sidebar.classList.toggle('collapsed');
+    });
+}
+
+// ============================================================================
+// AI INTEGRATION
+// ============================================================================
+
+let aiInitialized = false;
+
+async function initializeAI() {
+    if (aiInitialized) return;
+    
+    console.log('🤖 Initializing Osprey AI...');
+    
+    try {
+        // Check if browser-ai.js is loaded
+        if (typeof initializeOspreyAI === 'undefined') {
+            console.warn('⚠️ browser-ai.js not loaded, AI features disabled');
+            return;
+        }
+        
+        // Initialize AI with progress
+        await initializeOspreyAI((progress) => {
+            console.log(`AI Loading: ${progress.progress}%`);
+        });
+        
+        aiInitialized = true;
+        console.log('✅ Osprey AI initialized');
+        
+        // Check AI status
+        if (typeof getAIStatus === 'function') {
+            const status = getAIStatus();
+            console.log('AI Status:', status);
+            
+            if (status.usingOllama) {
+                console.log('✅ Using Ollama for real AI responses');
+            } else {
+                console.log('⚠️ Ollama not available, using fallback responses');
+            }
+        }
+        
+    } catch (error) {
+        console.error('❌ AI initialization failed:', error);
+    }
+}
+
+function initializeAgentChat(agentId) {
+    console.log(`Initializing chat for agent: ${agentId}`);
+    
+    // Set active agent
+    if (typeof setActiveAgent === 'function') {
+        setActiveAgent(agentId);
+    }
+    
+    // Setup send button for this agent's chat
+    const page = document.querySelector(`[data-page="${agentId}"]`);
+    if (!page) return;
+    
+    const sendBtn = page.querySelector('.btn-send');
+    const input = page.querySelector('.chat-input');
+    
+    if (sendBtn && input) {
+        // Remove old listeners
+        const newSendBtn = sendBtn.cloneNode(true);
+        sendBtn.parentNode.replaceChild(newSendBtn, sendBtn);
+        
+        // Add new listener
+        newSendBtn.addEventListener('click', () => {
+            sendMessage(agentId);
+        });
+        
+        // Enter to send
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage(agentId);
+            }
+        });
+    }
+}
+
+async function sendMessage(agentId) {
+    const page = document.querySelector(`[data-page="${agentId}"]`);
+    if (!page) return;
+    
+    const input = page.querySelector('.chat-input');
+    const messagesContainer = page.querySelector('.chat-messages');
     
     const message = input.value.trim();
     if (!message) return;
     
-    if (!isAIReady) {
-        alert('AI is still loading. Please wait.');
-        return;
-    }
-    
-    // Clear input
+    // Add user message
+    addMessage(messagesContainer, message, 'user', AppState.user.initials);
     input.value = '';
     
-    // Add user message
-    addMessageToChat('user', message, currentAgent, true);
+    // Auto-resize textarea
+    input.style.height = 'auto';
     
     // Show typing indicator
-    showTypingIndicator();
+    const typingId = addTypingIndicator(messagesContainer, agentId);
     
     try {
-        const response = await window.generateAIResponse(message, currentAgent);
-        removeTypingIndicator();
-        addMessageToChat('ai', response, currentAgent, true);
+        // Generate AI response
+        let response;
+        
+        if (typeof generateAIResponse === 'function') {
+            response = await generateAIResponse(message, agentId);
+        } else {
+            response = "AI is not initialized. Please check that browser-ai.js is loaded.";
+        }
+        
+        // Remove typing indicator
+        removeTypingIndicator(messagesContainer, typingId);
+        
+        // Add AI response
+        addMessage(messagesContainer, response, 'assistant', getAgentEmoji(agentId));
+        
     } catch (error) {
-        removeTypingIndicator();
-        addMessageToChat('error', 'Sorry, I encountered an error. Please try again.', currentAgent, false);
+        console.error('Error generating response:', error);
+        removeTypingIndicator(messagesContainer, typingId);
+        addMessage(messagesContainer, 'Sorry, I encountered an error. Please try again.', 'assistant', getAgentEmoji(agentId));
     }
 }
 
-function addMessageToChat(type, content, agentId, saveToHistory) {
-    const chatContainer = document.getElementById('chat-messages');
-    if (!chatContainer) return;
-
+function addMessage(container, text, type, avatar) {
     const messageDiv = document.createElement('div');
-    messageDiv.className = `message ${type}-message`;
+    messageDiv.className = `message ${type}`;
     
-    if (type === 'ai') {
-        const agent = AGENTS[agentId];
-        messageDiv.innerHTML = `
-            <div class="message-avatar">${agent?.icon || '🤖'}</div>
-            <div class="message-content">${escapeHtml(content)}</div>
-        `;
-    } else if (type === 'user') {
-        messageDiv.innerHTML = `
-            <div class="message-content">${escapeHtml(content)}</div>
-        `;
-    } else {
-        messageDiv.innerHTML = `
-            <div class="message-content">${escapeHtml(content)}</div>
-        `;
-    }
+    const time = new Date().toLocaleTimeString('en-US', { 
+        hour: 'numeric', 
+        minute: '2-digit'
+    });
     
-    chatContainer.appendChild(messageDiv);
-    chatContainer.scrollTop = chatContainer.scrollHeight;
-
-    if (saveToHistory) {
-        if (!messageHistory[agentId]) messageHistory[agentId] = [];
-        messageHistory[agentId].push({ type, content });
-    }
-}
-
-function showTypingIndicator() {
-    const chatContainer = document.getElementById('chat-messages');
-    if (!chatContainer) return;
-    
-    const indicator = document.createElement('div');
-    indicator.className = 'message ai-message typing-indicator';
-    indicator.id = 'typing-indicator';
-    indicator.innerHTML = `
-        <div class="message-avatar">${AGENTS[currentAgent]?.icon || '🤖'}</div>
-        <div class="message-content">
-            <div class="typing-dots">
-                <div class="typing-dot"></div>
-                <div class="typing-dot"></div>
-                <div class="typing-dot"></div>
-            </div>
+    messageDiv.innerHTML = `
+        <div class="message-avatar">${avatar}</div>
+        <div>
+            <div class="message-bubble">${escapeHtml(text)}</div>
+            <div class="message-time">${time}</div>
         </div>
     `;
-    chatContainer.appendChild(indicator);
-    chatContainer.scrollTop = chatContainer.scrollHeight;
-}
-
-function removeTypingIndicator() {
-    const indicator = document.getElementById('typing-indicator');
-    if (indicator) indicator.remove();
-}
-
-function showWelcomeMessage() {
-    // Only show if chat container exists
-    const chatContainer = document.getElementById('chat-messages');
-    if (!chatContainer) {
-        console.log('Chat container not ready yet, skipping welcome message');
-        return;
-    }
     
-    const greeting = window.getAgentGreeting(currentAgent);
-    addMessageToChat('ai', greeting, currentAgent, false);
+    container.appendChild(messageDiv);
+    
+    // Scroll to bottom
+    container.scrollTop = container.scrollHeight;
 }
 
-// ===============================================
-// USER SETTINGS FUNCTIONS
-// ===============================================
-
-async function updateProfile(event) {
-    event.preventDefault();
+function addTypingIndicator(container, agentId) {
+    const id = 'typing-' + Date.now();
+    const typingDiv = document.createElement('div');
+    typingDiv.className = 'message assistant';
+    typingDiv.id = id;
     
-    const name = document.getElementById('profile-name').value;
-    const email = document.getElementById('profile-email').value;
-    
-    try {
-        const response = await fetch('/api/user/profile', {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
-            body: JSON.stringify({ name, email })
-        });
-        
-        const data = await response.json();
-        
-        if (data.success) {
-            alert('Profile updated successfully!');
-            currentUser.name = name;
-            currentUser.email = email;
-            renderSidebar();
-        } else {
-            alert('Failed to update profile: ' + (data.error || 'Unknown error'));
-        }
-    } catch (error) {
-        console.error('Profile update error:', error);
-        alert('Failed to update profile');
-    }
-}
-
-async function changePassword(event) {
-    event.preventDefault();
-    
-    const currentPassword = document.getElementById('current-password').value;
-    const newPassword = document.getElementById('new-password').value;
-    const confirmPassword = document.getElementById('confirm-password').value;
-    
-    if (newPassword !== confirmPassword) {
-        alert('New passwords do not match!');
-        return;
-    }
-    
-    try {
-        const response = await fetch('/api/user/profile', {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
-            body: JSON.stringify({ currentPassword, newPassword })
-        });
-        
-        const data = await response.json();
-        
-        if (data.success) {
-            alert('Password updated successfully!');
-            document.getElementById('password-form').reset();
-        } else {
-            alert('Failed to update password: ' + (data.error || 'Unknown error'));
-        }
-    } catch (error) {
-        console.error('Password update error:', error);
-        alert('Failed to update password');
-    }
-}
-
-async function changeTheme(theme) {
-    try {
-        const response = await fetch('/api/user/profile', {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
-            body: JSON.stringify({ theme })
-        });
-        
-        if (response.ok) {
-            document.documentElement.setAttribute('data-theme', theme);
-            currentUser.theme = theme;
-        }
-    } catch (error) {
-        console.error('Theme update error:', error);
-    }
-}
-
-async function toggleNotifications(enabled) {
-    try {
-        await fetch('/api/user/profile', {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
-            body: JSON.stringify({ notifications: enabled })
-        });
-        currentUser.notifications = enabled;
-    } catch (error) {
-        console.error('Notifications update error:', error);
-    }
-}
-
-// ===============================================
-// ADMIN FUNCTIONS
-// ===============================================
-
-async function loadUsers() {
-    try {
-        const response = await fetch('/api/admin/users', {
-            credentials: 'include'
-        });
-        const data = await response.json();
-        
-        if (data.success) {
-            renderUsersTable(data.users);
-        }
-    } catch (error) {
-        console.error('Failed to load users:', error);
-    }
-}
-
-function renderUsersTable(users) {
-    const tbody = document.getElementById('users-table-body');
-    if (!tbody) return;
-    
-    tbody.innerHTML = users.map(user => `
-        <tr>
-            <td>${escapeHtml(user.name)}</td>
-            <td>${escapeHtml(user.username)}</td>
-            <td>${escapeHtml(user.email)}</td>
-            <td><span class="role-badge role-${user.role}">${user.role}</span></td>
-            <td>${new Date(user.created).toLocaleDateString()}</td>
-            <td>
-                <button class="btn-sm" onclick="editUser('${user.id}')">Edit</button>
-                ${user.id !== currentUser.id ? `
-                <button class="btn-sm btn-danger" onclick="deleteUser('${user.id}', '${escapeHtml(user.username)}')">Delete</button>
-                ` : ''}
-            </td>
-        </tr>
-    `).join('');
-}
-
-function showCreateUserModal() {
-    const modal = document.getElementById('modal-container');
-    if (!modal) return;
-    
-    modal.innerHTML = `
-        <div class="modal-overlay" onclick="closeModal()">
-            <div class="modal-content" onclick="event.stopPropagation()">
-                <div class="modal-header">
-                    <h2>Create New User</h2>
-                    <button class="modal-close" onclick="closeModal()">×</button>
+    typingDiv.innerHTML = `
+        <div class="message-avatar">${getAgentEmoji(agentId)}</div>
+        <div>
+            <div class="message-bubble">
+                <div class="typing-indicator">
+                    <span></span><span></span><span></span>
                 </div>
-                <form id="create-user-form" onsubmit="createUser(event)">
-                    <div class="form-group">
-                        <label>Name *</label>
-                        <input type="text" id="new-user-name" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Username *</label>
-                        <input type="text" id="new-user-username" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Email *</label>
-                        <input type="email" id="new-user-email" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Password *</label>
-                        <input type="password" id="new-user-password" required minlength="6">
-                    </div>
-                    <div class="form-group">
-                        <label>Role *</label>
-                        <select id="new-user-role" required>
-                            <option value="user">User</option>
-                            <option value="admin">Admin</option>
-                        </select>
-                    </div>
-                    <div class="modal-actions">
-                        <button type="button" class="btn-secondary" onclick="closeModal()">Cancel</button>
-                        <button type="submit" class="btn-primary">Create User</button>
-                    </div>
-                </form>
             </div>
         </div>
     `;
-    modal.style.display = 'block';
+    
+    container.appendChild(typingDiv);
+    container.scrollTop = container.scrollHeight;
+    
+    return id;
 }
 
-async function createUser(event) {
-    event.preventDefault();
-    
-    const userData = {
-        name: document.getElementById('new-user-name').value,
-        username: document.getElementById('new-user-username').value,
-        email: document.getElementById('new-user-email').value,
-        password: document.getElementById('new-user-password').value,
-        role: document.getElementById('new-user-role').value
+function removeTypingIndicator(container, id) {
+    const indicator = document.getElementById(id);
+    if (indicator) {
+        indicator.remove();
+    }
+}
+
+function getAgentEmoji(agentId) {
+    const emojis = {
+        'content-writer': '✍️',
+        'code-assistant': '💻',
+        'data-analyst': '📊',
+        'support-bot': '🎧',
+        'research': '🔬',
+        'marketing': '📈'
     };
-    
-    try {
-        const response = await fetch('/api/admin/users', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
-            body: JSON.stringify(userData)
-        });
-        
-        const data = await response.json();
-        
-        if (data.success) {
-            alert('User created successfully!');
-            closeModal();
-            loadUsers();
-        } else {
-            alert('Failed to create user: ' + (data.error || 'Unknown error'));
-        }
-    } catch (error) {
-        console.error('Create user error:', error);
-        alert('Failed to create user');
-    }
+    return emojis[agentId] || '🤖';
 }
 
-async function editUser(userId) {
-    // TODO: Implement edit user modal
-    alert('Edit user functionality - Coming soon!');
-}
-
-async function deleteUser(userId, username) {
-    if (!confirm(`Are you sure you want to delete user "${username}"?`)) {
-        return;
-    }
-    
-    try {
-        const response = await fetch(`/api/admin/users/${userId}`, {
-            method: 'DELETE',
-            credentials: 'include'
-        });
-        
-        const data = await response.json();
-        
-        if (data.success) {
-            alert('User deleted successfully!');
-            loadUsers();
-        } else {
-            alert('Failed to delete user: ' + (data.error || 'Unknown error'));
-        }
-    } catch (error) {
-        console.error('Delete user error:', error);
-        alert('Failed to delete user');
-    }
-}
-
-function closeModal() {
-    const modal = document.getElementById('modal-container');
-    if (modal) {
-        modal.style.display = 'none';
-        modal.innerHTML = '';
-    }
-}
-
-// ===============================================
-// NAVIGATION
-// ===============================================
-
-function attachEventListeners() {
-    // Page navigation
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.addEventListener('click', (e) => {
-            e.preventDefault();
-            const page = item.dataset.page;
-            navigateToPage(page);
-        });
-    });
-}
-
-function navigateToPage(pageName) {
-    // Update nav items
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.classList.remove('active');
-        if (item.dataset.page === pageName) {
-            item.classList.add('active');
-        }
-    });
-    
-    // Show page
-    document.querySelectorAll('.page').forEach(page => {
-        page.classList.remove('active');
-    });
-    
-    const targetPage = document.getElementById(`page-${pageName}`);
-    if (targetPage) {
-        targetPage.classList.add('active');
-    }
-    
-    // Load admin users if navigating to admin page
-    if (pageName === 'admin') {
-        loadUsers();
-    }
-}
-
-// ===============================================
-// UTILITY FUNCTIONS
-// ===============================================
+// ============================================================================
+// UTILITIES
+// ============================================================================
 
 function escapeHtml(text) {
     const div = document.createElement('div');
@@ -824,17 +425,21 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-async function logout() {
-    try {
-        await fetch('/api/auth/logout', {
-            method: 'POST',
-            credentials: 'include'
-        });
-        window.location.href = '/signin.html';
-    } catch (error) {
-        console.error('Logout error:', error);
-        window.location.href = '/signin.html';
-    }
+function handleLogout() {
+    console.log('Logging out...');
+    // Add logout logic here
+    alert('Logout functionality - connect to your backend');
 }
 
-console.log('🦅 Dashboard controller loaded');
+// ============================================================================
+// EXPORT FOR DEBUGGING
+// ============================================================================
+
+window.OspreyDashboard = {
+    state: AppState,
+    navigateToPage,
+    toggleTheme,
+    sendMessage
+};
+
+console.log('📊 Dashboard loaded. Access via window.OspreyDashboard');
