@@ -2,10 +2,26 @@ services:
   - type: web
     name: osprey-ai-platform
     env: node
-    buildCommand: npm install
-    startCommand: npm start
+    plan: free  # or starter
+    buildCommand: |
+      npm install
+      # Install Ollama
+      curl -fsSL https://ollama.com/install.sh | sh
+      # Pull default model
+      ollama pull llama2
+    startCommand: |
+      # Start Ollama in background
+      ollama serve &
+      # Wait for Ollama to be ready
+      sleep 10
+      # Start Node.js server
+      npm start
     envVars:
       - key: NODE_ENV
         value: production
-      - key: PORT
-        value: 10000
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: OLLAMA_URL
+        value: http://localhost:11434
+      - key: OLLAMA_MODEL
+        value: llama2
