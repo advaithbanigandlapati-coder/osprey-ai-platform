@@ -1,10 +1,223 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Osprey AI Agentic Studio</title>
+    <title>Dashboard - Osprey AI Platform</title>
+    
+    <!-- Stylesheets -->
     <link rel="stylesheet" href="assets/css/dashboard.css">
+    
+    <!-- AI Agent Styles -->
+    <style>
+        /* AI Loading Overlay */
+        .ai-loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.92);
+            backdrop-filter: blur(10px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            transition: opacity 0.5s ease;
+        }
+
+        .ai-loading-content {
+            background: white;
+            padding: 60px;
+            border-radius: 24px;
+            text-align: center;
+            max-width: 550px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .ai-loading-icon {
+            font-size: 72px;
+            margin-bottom: 25px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.15); opacity: 0.8; }
+        }
+
+        .ai-loading-content h2 {
+            color: #578098;
+            margin: 0 0 15px 0;
+            font-size: 32px;
+            font-weight: 600;
+        }
+
+        .ai-loading-content p {
+            color: #666;
+            margin: 10px 0;
+            font-size: 16px;
+        }
+
+        .ai-loading-note {
+            font-size: 14px !important;
+            color: #999 !important;
+            font-style: italic;
+            margin-top: 10px !important;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 14px;
+            background: rgba(0,0,0,0.1);
+            border-radius: 8px;
+            margin: 30px 0 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #578098, #cbe4ed, #578098);
+            background-size: 200% 100%;
+            transition: width 0.3s ease;
+            border-radius: 8px;
+            animation: shimmer 2s linear infinite;
+            box-shadow: 0 0 15px rgba(87,128,152,0.6);
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .ai-loading-status {
+            color: #578098 !important;
+            font-weight: 600 !important;
+            font-size: 16px !important;
+            margin-top: 20px !important;
+        }
+
+        /* AI Chat Container */
+        .ai-chat-container {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 250px);
+            background: #f5f5f5;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .ai-chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: white;
+        }
+
+        .ai-message-form {
+            display: flex;
+            gap: 10px;
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .ai-message-input {
+            flex: 1;
+            padding: 12px 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .ai-message-input:focus {
+            border-color: #578098;
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            opacity: 0.8;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 6px;
+            padding: 8px 0;
+            align-items: center;
+        }
+
+        .typing-dot {
+            width: 10px;
+            height: 10px;
+            background: #578098;
+            border-radius: 50%;
+            animation: typingAnim 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: 0s; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typingAnim {
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.7; }
+            30% { transform: translateY(-10px); opacity: 1; }
+        }
+
+        /* Message Avatar */
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+
+        .ai-message {
+            display: flex;
+            align-items: flex-start;
+            margin: 15px 0;
+        }
+
+        .user-message {
+            justify-content: flex-end;
+            margin: 15px 0;
+        }
+
+        .message-content {
+            background: rgba(255,255,255,0.95);
+            padding: 12px 18px;
+            border-radius: 18px;
+            max-width: 70%;
+            border: 1px solid rgba(87,128,152,0.2);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .user-message .message-content {
+            background: linear-gradient(135deg, #578098, #6a93aa);
+            color: white;
+            border: none;
+        }
+
+        .error-message .message-content {
+            background: #fee;
+            color: #c00;
+            border-color: #fcc;
+        }
+    </style>
 </head>
 <body class="dashboard-page dark-theme">
     <div class="dashboard-container">
@@ -17,12 +230,32 @@
                     <div class="spinner-ring"></div>
                 </div>
                 <h2>Loading Osprey AI Platform...</h2>
-                <p>Initializing your agent dashboard. This may take 30-60 seconds on first visit</p>
+                <p>Initializing your agent dashboard</p>
             </div>
         </main>
     </div>
+    
     <div id="modal-container"></div>
     <div id="toast-container"></div>
+    
+    <!-- AI Loading Overlay -->
+    <div id="ai-loading-overlay" class="ai-loading-overlay">
+        <div class="ai-loading-content">
+            <div class="ai-loading-icon">🦅</div>
+            <h2>Initializing Osprey AI</h2>
+            <p>Loading AI agents...</p>
+            <p class="ai-loading-note">Intelligent agents ready in seconds</p>
+            <div class="progress-bar">
+                <div id="ai-progress-fill" class="progress-fill" style="width: 0%"></div>
+            </div>
+            <p id="ai-loading-status" class="ai-loading-status">Preparing...</p>
+        </div>
+    </div>
+
+    <!-- Load Browser AI (NO type="module") -->
+    <script src="assets/js/browser-ai.js"></script>
+    
+    <!-- Load Dashboard Controller -->
     <script src="assets/js/dashboard.js"></script>
 </body>
 </html>
