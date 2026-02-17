@@ -1,0 +1,22 @@
+# Osprey AI Python Agents - Requirements
+# 100% FREE - NO PAID APIs NEEDED!
+
+# Web Framework
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+pydantic==2.5.0
+
+# AI Integration - Ollama (FREE, LOCAL)
+ollama==0.1.6
+
+# NLP & Text Processing (for quality scoring, SEO, readability)
+spacy==3.7.2
+textstat==0.12.2
+scikit-learn==1.3.2
+numpy==1.26.2
+
+# Data Processing
+pandas==2.1.3
+
+# Utilities
+python-dotenv==1.0.0
