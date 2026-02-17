@@ -1,27 +1,139 @@
 services:
+  # ═══════════════════════════════════════════════════════════════════
+  # OSPREY AI PLATFORM - Single Service Deployment
+  # ═══════════════════════════════════════════════════════════════════
+  # This configuration runs Node.js, Python, and Ollama on the same instance
+  
   - type: web
     name: osprey-ai-platform
     env: node
-    plan: free  # or starter
+    region: oregon
+    plan: starter  # Free tier or starter plan
+    
+    # ── BUILD COMMAND ──────────────────────────────────────────────────
+    # Installs Node.js, Python, Ollama, and all dependencies
     buildCommand: |
+      echo "🦅 Building Osprey AI Platform..."
+      
+      # Install Node.js dependencies
+      echo "📦 Installing Node.js dependencies..."
       npm install
+      
+      # Install Python 3 and pip
+      echo "🐍 Installing Python..."
+      apt-get update && apt-get install -y python3 python3-pip python3-venv
+      
+      # Install Python dependencies
+      echo "📦 Installing Python dependencies..."
+      cd agents
+      pip3 install -r requirements.txt --break-system-packages || pip3 install -r requirements.txt
+      python3 -m spacy download en_core_web_sm
+      cd ..
+      
       # Install Ollama
+      echo "🤖 Installing Ollama..."
       curl -fsSL https://ollama.com/install.sh | sh
-      # Pull default model
+      
+      # Pull AI models
+      echo "📥 Downloading AI models..."
       ollama pull llama2
+      
+      echo "✅ Build complete!"
+    
+    # ── START COMMAND ──────────────────────────────────────────────────
+    # Starts all 3 services: Ollama → Python → Node.js
     startCommand: |
+      echo "🚀 Starting Osprey AI Platform..."
+      
       # Start Ollama in background
+      echo "🤖 Starting Ollama..."
       ollama serve &
-      # Wait for Ollama to be ready
+      
+      # Wait for Ollama to initialize
       sleep 10
-      # Start Node.js server
+      
+      # Start Python server in background
+      echo "🐍 Starting Python AI agents..."
+      cd agents && python3 agent-server.py &
+      
+      # Wait for Python server
+      sleep 15
+      
+      # Start Node.js server (foreground - keeps the service running)
+      echo "🦅 Starting Node.js server..."
       npm start
+    
+    # ── ENVIRONMENT VARIABLES ──────────────────────────────────────────
     envVars:
       - key: NODE_ENV
         value: production
+      
       - key: SESSION_SECRET
-        generateValue: true
-      - key: OLLAMA_URL
-        value: http://localhost:11434
-      - key: OLLAMA_MODEL
-        value: llama2
+        generateValue: true  # Render generates a secure random value
+      
+      - key: PYTHON_SERVER_URL
+        value: http://localhost:8001  # Python runs on same machine
+      
+      - key: PORT
+        value: 10000
+
+# ═══════════════════════════════════════════════════════════════════
+# ALTERNATIVE: TWO-SERVICE DEPLOYMENT (Better Scaling)
+# ═══════════════════════════════════════════════════════════════════
+# Uncomment below if you want separate Node.js and Python services
+# This allows independent scaling and restarts
+
+# services:
+#   # Node.js Service
+#   - type: web
+#     name: osprey-node
+#     env: node
+#     buildCommand: npm install
+#     startCommand: npm start
+#     envVars:
+#       - key: NODE_ENV
+#         value: production
+#       - key: SESSION_SECRET
+#         generateValue: true
+#       - key: PYTHON_SERVER_URL
+#         value: https://osprey-python.onrender.com  # Update with your Python service URL
+#   
+#   # Python + Ollama Service
+#   - type: web
+#     name: osprey-python
+#     env: python
+#     buildCommand: |
+#       pip install -r agents/requirements.txt
+#       python -m spacy download en_core_web_sm
+#       curl -fsSL https://ollama.com/install.sh | sh
+#       ollama pull llama2
+#     startCommand: |
+#       ollama serve &
+#       sleep 10
+#       cd agents && python agent-server.py
+
+# ═══════════════════════════════════════════════════════════════════
+# DEPLOYMENT NOTES
+# ═══════════════════════════════════════════════════════════════════
+#
+# Single Service (Recommended for starting):
+#   - Everything runs on one instance
+#   - Easier to manage
+#   - Lower cost
+#   - Use the configuration above (already uncommented)
+#
+# Two Services (Better for production):
+#   - Node.js and Python run separately
+#   - Better scaling and isolation
+#   - Slightly higher cost
+#   - Uncomment the alternative section above
+#   - Update PYTHON_SERVER_URL to your Python service URL
+#
+# To Deploy:
+#   1. Commit all changes to GitHub
+#   2. Push to your repository
+#   3. Render will automatically detect render.yaml
+#   4. Build takes ~10-15 minutes
+#   5. Check logs for "✅ Python AI ready!"
+#
+# ═══════════════════════════════════════════════════════════════════
