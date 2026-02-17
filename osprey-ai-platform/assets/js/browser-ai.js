@@ -1,10 +1,3 @@
-/**
- * Osprey AI Platform - Browser AI Client (Python + Ollama Powered)
- * REPLACE: /assets/js/browser-ai.js
- * 
- * This connects to the NEW Python AI agents with quality scoring!
- */
-
 console.log('🦅 Loading Osprey AI System (Python-Powered)...');
 
 // ===============================================
