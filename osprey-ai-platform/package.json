@@ -1,7 +1,7 @@
 {
   "name": "osprey-ai-labs-platform",
   "version": "2.0.0",
-  "description": "Osprey AI Labs - Enterprise Agent Production Infrastructure with Ollama AI",
+  "description": "Osprey AI Labs - Enterprise Agent Production Infrastructure with Ollama AI + Python Agents",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -17,7 +17,8 @@
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "node-fetch": "^2.6.7"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
