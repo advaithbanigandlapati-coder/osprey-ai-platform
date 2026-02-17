@@ -6,11 +6,17 @@ const cors    = require('cors');
 const path    = require('path');
 const { v4: uuidv4 } = require('uuid');
 require('dotenv').config();
+const fetch = require('node-fetch'); // NEW: For Python AI proxy
 const aiRouter = require('./api/ai-router');
 const ollamaHandler = require('./api/ollama-handler');
 
 const app  = express();
 const PORT = process.env.PORT || 10000;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PYTHON AI SERVER - NEW: For advanced Python agents
+// ─────────────────────────────────────────────────────────────────────────────
+const PYTHON_SERVER = process.env.PYTHON_SERVER_URL || 'http://localhost:8001';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // CRITICAL: trust proxy MUST come first — without this, Render's reverse
@@ -540,6 +546,94 @@ app.get('/api/ai/agents/:agentId/greeting', (req, res) => {
 });
 
 
+// ═════════════════════════════════════════════════════════════════════════════
+// PYTHON AI ENDPOINTS - Proxy to Advanced Python Agents
+// ═════════════════════════════════════════════════════════════════════════════
+// These endpoints proxy requests to the Python FastAPI server (agent-server.py)
+// which provides 6 specialized AI agents with advanced features like SEO scoring,
+// quality metrics, and readability analysis.
+
+// Health check for Python AI server
+app.get('/api/python-ai/health', async (req, res) => {
+    try {
+        const response = await fetch(`${PYTHON_SERVER}/health`);
+        const data = await response.json();
+        res.json(data);
+    } catch (error) {
+        console.error('Python AI server unavailable:', error.message);
+        res.json({
+            status: 'unavailable',
+            message: 'Python AI server not reachable',
+            agents: []
+        });
+    }
+});
+
+// Generate AI response using Python agents (with advanced features)
+app.post('/api/python-ai/generate', async (req, res) => {
+    try {
+        const { message, agent, history, ...options } = req.body;
+        
+        if (!message || typeof message !== 'string') {
+            return res.status(400).json({ error: 'Message required' });
+        }
+
+        // Forward to Python server
+        const response = await fetch(`${PYTHON_SERVER}/generate`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                message: message,
+                agent: agent || 'content-writer',
+                model: options.model || 'llama2',
+                target_word_count: options.target_word_count || 800,
+                temperature: options.temperature || 0.7,
+                tone: options.tone || 'professional',
+                language: options.language || 'en',
+                seo_optimize: options.seo_optimize !== false
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`Python server returned ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        // Log activity
+        activityLogs.push({
+            id: uuidv4(),
+            timestamp: new Date(),
+            user: req.session?.user?.username || 'Anonymous',
+            action: 'Python AI Generation',
+            details: `Agent: ${data.agent}, Quality: ${data.quality_score || 'N/A'}`,
+            severity: 'info'
+        });
+
+        res.json(data);
+
+    } catch (error) {
+        console.error('Python AI generation error:', error);
+        res.status(500).json({
+            error: 'Python AI generation failed',
+            message: error.message,
+            fallback: 'Python AI server unavailable. Please try again.'
+        });
+    }
+});
+
+// Get available Python agents
+app.get('/api/python-ai/agents', async (req, res) => {
+    try {
+        const response = await fetch(`${PYTHON_SERVER}/agents`);
+        const data = await response.json();
+        res.json(data);
+    } catch (error) {
+        res.json({ agents: [] });
+    }
+});
+
+
 
 // ─────────────────────────────────────────────────────────────────────────────
 // START
@@ -572,6 +666,16 @@ app.listen(PORT, '0.0.0.0', () => {
         } else {
             console.log('⚠️  Ollama not available - using fallback');
         }
+        
+        // Check Python AI server
+        console.log('\n🐍 Checking Python AI server...');
+        try {
+            const response = await fetch(`${PYTHON_SERVER}/health`);
+            const data = await response.json();
+            console.log(`✅ Python AI ready! ${data.count || 0}/6 agents loaded`);
+        } catch (error) {
+            console.log('⚠️  Python AI server not available');
+            console.log('   Start it: cd agents && python3 agent-server.py');
+        }
     }, 2000);
 });
-
